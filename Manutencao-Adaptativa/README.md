@@ -9,7 +9,7 @@ O projeto consiste na aplicação de técnicas de **manutenção adaptativa** so
 
 ---
 
-## 🚀 Equipa de Desenvolvimento
+## 🚀 Equipe de Desenvolvimento
 
 * Bruna Miranda
 * Carlos Breno
