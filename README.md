@@ -22,7 +22,7 @@ Docente: Prof. Dr. Andrey Rodrigues
 
 O projeto está organizado em pastas, uma para cada trabalho prático entregue ao longo da disciplina.
 
-* **`/Manutencao-Corretiva/`**: Contém o código-fonte e a documentação do primeiro trabalho prático.
+* **`/Manutencao_Corretiva/`**: Contém o código-fonte e a documentação do primeiro trabalho prático.
 * **`/manutencao-adaptativa/`**: Contém toda a documentação específica do **Trabalho Prático 2 (TP2)**, incluindo relatórios e evidências.
 
 ---
