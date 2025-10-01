@@ -1,6 +1,7 @@
 # Manutenção Adaptativa: B-High Education
 
 ### TP2 - Manutenção e Integração de Software
+Docente: Prof. Dr. Andrey Rodrigues
 
 ---
 
