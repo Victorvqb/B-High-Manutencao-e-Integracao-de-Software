@@ -1,27 +1,35 @@
-# Manutenção e Integração de Software
+# Manutenção e Integração de Software - Engenharia de Software (UFAM)
+
+Este repositório centraliza os trabalhos práticos (TPs) desenvolvidos para a disciplina de Manutenção e Integração de Software. Cada trabalho está contido na sua própria pasta, com o seu respetivo código-fonte e documentação.
 
 ---
 
-### **Contexto**
+## 🚀 Equipa de Desenvolvimento
 
-O código é escrito apenas uma vez, mas lido e alterado inúmeras vezes por diversos desenvolvedores ao longo de anos. Na prática, os desenvolvedores passam mais tempo a ler e a entender o código do que a escrevê-lo. Por essa razão, é fundamental otimizar o código para leitura e entendimento, mesmo que isso exija um esforço maior durante a escrita inicial. Investimentos na compreensão do código tendem a pagar-se a longo prazo, especialmente em sistemas de grande dimensão e com manutenção frequente.
+* Bruna Miranda
+* Carlos Breno
+* Júlia Farias
+* Victor Queiroz
+* Welligton Salmo
 
-### **Estrutura do Repositório**
+---
 
-O repositório está organizado da seguinte forma para separar a documentação do código-fonte:
-* **`/docs`**: Contém todos os ficheiros de documentação do projeto, como a análise de bugs, a descrição da arquitetura do sistema e as imagens de evidência.
-* **`/src`**: Contém o código-fonte completo da aplicação, dividido nas subpastas `backend` e `frontend`.
-* **`/LICENSE`**: Ficheiro com a licença do projeto.
-* **`/README.md`**: Este ficheiro, com o resumo e a organização do projeto.
+## 📂 Estrutura do Repositório
 
-### **Tópicos Abordados**
+O projeto está organizado em pastas, uma para cada trabalho prático entregue ao longo da disciplina.
 
-O material de estudo sobre Código Legível aborda as seguintes recomendações essenciais:
-* **Escrita de código em geral :** A importância de adotar um guia de estilo para manter a consistência do código.
-* **Escolha de nomes (naming):** Práticas para a escolha de nomes legíveis e que revelem o seu propósito para variáveis, funções e classes.
-* **Implementação de funções:** Recomendações para escrever funções pequenas, coesas e com poucas responsabilidades.
-* **Tratamento de erros:** Boas práticas para lidar com exceções e separar o fluxo normal do fluxo excecional do código.
+* **`/TP1_Manutencao_e_Integracao_de_Software-main/`**: Contém o código-fonte e a documentação do primeiro trabalho prático.
+* **`/manutencao-adaptativa/`**: Contém toda a documentação específica do **Trabalho Prático 2 (TP2)**, incluindo relatórios e evidências.
 
-### **Créditos e Licença**
+---
 
-* **Licença:** Este material pode ser utilizado livremente, respeitando a licença Creative Commons: Atribuição - Uso Não Comercial - Compartilhamento pela mesma Licença.
+## 📖 Trabalhos Práticos
+
+### TP2 - Manutenção Adaptativa
+
+Este trabalho consistiu em aplicar conceitos de manutenção adaptativa sobre uma aplicação web existente (um Ambiente Virtual de Aprendizagem).
+
+* **Código-Fonte**: O código modificado para este trabalho pode ser encontrado na pasta `./src/`.
+* **Documentação Detalhada**: Para uma visão completa do que foi feito, incluindo o plano de estratégia, relatório final e evidências, aceda à pasta **[./manutencao-adaptativa/](./manutencao-adaptativa/)**.
+
+*(Esta secção pode ser expandida no futuro para incluir links e descrições de outros trabalhos, como TP3, TP4, etc.)*
