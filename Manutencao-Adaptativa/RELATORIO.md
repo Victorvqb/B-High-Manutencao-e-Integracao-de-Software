@@ -39,7 +39,7 @@ Docente: Prof. Dr. Andrey Rodrigues
 
 * **Evidências**:
 
-![Antes da correção da API do YouTube](./evidencias/1%20-%20Integra%C3%A7%C3%A3o%20com%20API%20Externa%20(Youtube)/1%20-%20Youtube-antes.png)
+![Antes da correção da API do YouTube](Manutencao-Adaptativa/Evidencias/1 - Integração com API Externa (YouTube)/1 - Youtube-antes.png)
 _Figura 1: Layout antes da implementação da API do Youtube
 
 ![Depois da correção da API do YouTube](./evidencias/1%20-%20Integra%C3%A7%C3%A3o%20com%20API%20Externa%20(Youtube)/2%20-%20Youtube-agora.png)
