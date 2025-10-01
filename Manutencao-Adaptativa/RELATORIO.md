@@ -94,7 +94,7 @@ _Figura 4: Tela de registo modificada, com os checkboxes e links para os termos.
 _Figura 5: Tela antes da implementação do local de configuração para exclusão da conta._
 
 ![Confirmação de Exclusão](https://github.com/Victorvqb/TP2-Manutencao-Adaptativa/blob/c04c306f0a970c36a50b7ef540c735bf5d895de9/Manutencao-Adaptativa/Evidencias/3%20-%20Conformidade%20LGPD%20(Exclus%C3%A3o%20de%20Conta)/2%20-%20LGPD-exclus%C3%A3o-agora.png)
-_Figura 6: Fluxo de segurança, campo para excluir a conta que exigi a senha do utilizador para confirmar a exclusão._
+_Figura 6: Fluxo de segurança, campo para excluir a conta que exige a senha do utilizador para confirmar a exclusão._
 
 ---
 
