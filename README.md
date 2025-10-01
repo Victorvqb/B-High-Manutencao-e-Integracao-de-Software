@@ -8,7 +8,7 @@ Docente: Prof. Dr. Andrey Rodrigues
 
 ---
 
-## 🚀 Equipa de Desenvolvimento
+## 🚀 Equipe de Desenvolvimento
 
 * Bruna Miranda
 * Carlos Breno
