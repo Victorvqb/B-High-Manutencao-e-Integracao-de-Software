@@ -4,6 +4,8 @@ Este repositório centraliza os trabalhos práticos (TPs) desenvolvidos para a d
 Cada trabalho está contido na sua própria pasta, junto de sua documentação.
 A Cada adaptação o código é atualizado.
 
+Docente: Prof. Dr. Andrey Rodrigues
+
 ---
 
 ## 🚀 Equipa de Desenvolvimento
