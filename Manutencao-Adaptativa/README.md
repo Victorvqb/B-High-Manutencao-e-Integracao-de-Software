@@ -40,7 +40,7 @@ O projeto está organizado na seguinte estrutura de pastas, conforme as diretriz
 
 ## 📋 Resumo das Adaptações Realizadas
 
-Foram implementadas três principais manutenções adaptativas, baseadas na ata de reunião da equipa e nos requisitos do trabalho:
+Foram implementadas três principais manutenções adaptativas, baseadas na ata de reunião da equipe e nos requisitos do trabalho:
 
 1.  **Integração com API Externa (YouTube)**: Adicionada uma funcionalidade para buscar e exibir vídeos do YouTube, enriquecendo o conteúdo da plataforma.
 2.  **Conformidade com a LGPD (Consentimento)**: Implementado um mecanismo de consentimento explícito na página de registo, com checkboxes para Termos de Uso e Política de Privacidade.
