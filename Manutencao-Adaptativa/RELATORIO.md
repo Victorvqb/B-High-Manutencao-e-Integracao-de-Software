@@ -40,10 +40,10 @@ Docente: Prof. Dr. Andrey Rodrigues
 * **Evidências**:
 
 ![Antes da correção da API do YouTube](https://github.com/Victorvqb/TP2-Manutencao-Adaptativa/blob/cf6ee8e505a5a83960db5db4b1d41267590bf212/Manutencao-Adaptativa/Evidencias/1%20-%20Integra%C3%A7%C3%A3o%20com%20API%20Externa%20(YouTube)/1%20-%20Youtube-antes.png)
-<center>Figura 1: Layout antes da implementação da API do Youtube</center>
+Figura 1: Layout antes da implementação da API do Youtube
 
 ![Depois da correção da API do YouTube](https://github.com/Victorvqb/TP2-Manutencao-Adaptativa/blob/094767c552110b1d9bba324ce36ad8694b7045c4/Manutencao-Adaptativa/Evidencias/1%20-%20Integra%C3%A7%C3%A3o%20com%20API%20Externa%20(YouTube)/2%20-%20Youtube-agora.png)
-<p style="text-align:center;">Figura 2: Página funcionando corretamente e exibindo os vídeos obtidos através do endpoint do backend.</p>
+Figura 2: Página funcionando corretamente e exibindo os vídeos obtidos através do endpoint do backend.
 
 ---
 
@@ -65,10 +65,10 @@ Docente: Prof. Dr. Andrey Rodrigues
 ### Evidências
 
 ![Tela de Cadastro Antes](https://github.com/Victorvqb/TP2-Manutencao-Adaptativa/blob/c04c306f0a970c36a50b7ef540c735bf5d895de9/Manutencao-Adaptativa/Evidencias/2%20-%20Conformidade%20LGPD%20(Consentimento%20no%20Registo)/1%20-LGPD-cadastro-antes.png)
-<center>Figura 3: Tela de registo original, sem os campos de consentimento.</center>
+Figura 3: Tela de registo original, sem os campos de consentimento.
 
 ![Tela de Cadastro Depois](https://github.com/Victorvqb/TP2-Manutencao-Adaptativa/blob/c04c306f0a970c36a50b7ef540c735bf5d895de9/Manutencao-Adaptativa/Evidencias/2%20-%20Conformidade%20LGPD%20(Consentimento%20no%20Registo)/2%20-LGPD-cadastro-agora.png)
-<center>Figura 4: Tela de registo modificada, com os checkboxes e links para os termos.</center>
+Figura 4: Tela de registo modificada, com os checkboxes e links para os termos.
 
 ---
 
@@ -91,10 +91,10 @@ Docente: Prof. Dr. Andrey Rodrigues
 ### Evidências
 
 ![Página de Configurações](https://github.com/Victorvqb/TP2-Manutencao-Adaptativa/blob/c04c306f0a970c36a50b7ef540c735bf5d895de9/Manutencao-Adaptativa/Evidencias/3%20-%20Conformidade%20LGPD%20(Exclus%C3%A3o%20de%20Conta)/1%20-%20LGPD-exclus%C3%A3o-antes.png)
-<center>Figura 5: Tela antes da implementação do local de configuração para exclusão da conta.</center>
+Figura 5: Tela antes da implementação do local de configuração para exclusão da conta.
 
 ![Confirmação de Exclusão](https://github.com/Victorvqb/TP2-Manutencao-Adaptativa/blob/c04c306f0a970c36a50b7ef540c735bf5d895de9/Manutencao-Adaptativa/Evidencias/3%20-%20Conformidade%20LGPD%20(Exclus%C3%A3o%20de%20Conta)/2%20-%20LGPD-exclus%C3%A3o-agora.png)
-<center>Figura 6: Fluxo de segurança, campo para excluir a conta que exige a senha do utilizador para confirmar a exclusão.</center>
+Figura 6: Fluxo de segurança, campo para excluir a conta que exige a senha do utilizador para confirmar a exclusão.
 
 ---
 
