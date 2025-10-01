@@ -5,7 +5,7 @@ Docente: Prof. Dr. Andrey Rodrigues
 
 ---
 
-**Equipa:**
+**Equipe:**
 * Bruna Miranda
 * Carlos Breno
 * Julia Farias
