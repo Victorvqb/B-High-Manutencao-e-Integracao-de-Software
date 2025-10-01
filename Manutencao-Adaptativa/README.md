@@ -21,11 +21,11 @@ O projeto consiste na aplicação de técnicas de **manutenção adaptativa** so
 ## 📂 Estrutura do Repositório
 
 O projeto está organizado na seguinte estrutura de pastas, conforme as diretrizes do trabalho:
-
--   `./manutencao-adaptativa/`: Contém toda a documentação relacionada ao TP2, incluindo este README, o relatório final, o plano de estratégia e as evidências.
--   `./src/`: Contém o código-fonte completo da aplicação, dividido em:
+-   `src`: Contém o código-fonte completo da aplicação, dividido em:
     -   `./src/backend/`: A API RESTful desenvolvida em Django.
     -   `./src/frontend/`: A aplicação cliente (Single Page Application) desenvolvida em React.
+-   `./manutencao-adaptativa/`: Contém toda a documentação relacionada ao TP2, incluindo este README, o relatório final, o plano de estratégia e as evidências.
+
 
 ---
 
