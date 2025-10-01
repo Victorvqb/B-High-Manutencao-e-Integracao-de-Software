@@ -1,4 +1,4 @@
-# Código Legível - Manutenção e Integração de Software
+# Manutenção e Integração de Software
 
 ---
 
