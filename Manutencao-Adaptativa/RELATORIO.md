@@ -43,7 +43,7 @@ Docente: Prof. Dr. Andrey Rodrigues
 <center>Figura 1: Layout antes da implementação da API do Youtube</center>
 
 ![Depois da correção da API do YouTube](https://github.com/Victorvqb/TP2-Manutencao-Adaptativa/blob/094767c552110b1d9bba324ce36ad8694b7045c4/Manutencao-Adaptativa/Evidencias/1%20-%20Integra%C3%A7%C3%A3o%20com%20API%20Externa%20(YouTube)/2%20-%20Youtube-agora.png)
-<center>Figura 2: Página funcionando corretamente e exibindo os vídeos obtidos através do endpoint do backend.</center>
+<p style="text-align:center;">Figura 2: Página funcionando corretamente e exibindo os vídeos obtidos através do endpoint do backend.</p>
 
 ---
 
