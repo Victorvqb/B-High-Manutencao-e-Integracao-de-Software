@@ -104,8 +104,6 @@ Para executar a aplicação, é necessário iniciar o backend e o frontend em te
 
 ## 📄 Documentação do TP2
 
-Toda a documentação detalhada do trabalho, incluindo o relatório final, o plano de estratégia, o changelog e as evidências, pode ser encontrada na pasta `manutencao-adaptativa`.
-
 -   **[RELATORIO.md](./RELATORIO.md)**: Síntese completa de todas as adaptações realizadas.
 -   **[plano-estrategia.md](./plano-estrategia.md)**: Descrição da estratégia adotada para cada tarefa.
 -   **[CHANGELOG.md](./CHANGELOG.md)**: Histórico detalhado das alterações feitas no sistema.
