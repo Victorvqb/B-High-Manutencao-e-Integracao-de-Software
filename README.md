@@ -34,6 +34,6 @@ O projeto está organizado em pastas, uma para cada trabalho prático entregue a
 Este trabalho consistiu em aplicar conceitos de manutenção adaptativa sobre uma aplicação web existente (um Ambiente Virtual de Aprendizagem).
 
 * **Código-Fonte**: O código modificado para este trabalho pode ser encontrado na pasta, podendo ser alterado frente a outras manuntenções `./src/`.
-* **Documentação Detalhada**: Para uma visão completa do que foi feito, incluindo o plano de estratégia, relatório final e evidências, aceda à pasta **[./manutencao-adaptativa/](./manutencao-adaptativa/)**.
+* **Documentação Detalhada**: Para uma visão completa do que foi feito, incluindo o plano de estratégia, relatório final e evidências, aceda à pasta **[./manutencao-adaptativa/](./Manutencao-Adaptativa)**.
 
 *(Esta secção pode ser expandida no futuro para incluir links e descrições de outros trabalhos)*
