@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.1.0] - 27-09-2025
+## [1.1.0] - 2025-10-01
 
 Esta versão introduz funcionalidades de manutenção adaptativa para enriquecer o conteúdo e garantir a conformidade com a LGPD.
 

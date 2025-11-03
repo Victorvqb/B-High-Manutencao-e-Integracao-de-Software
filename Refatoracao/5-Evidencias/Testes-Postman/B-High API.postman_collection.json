@@ -1,0 +1,514 @@
+{
+	"info": {
+		"_postman_id": "a1b2c3d4-e5f6-a7b8-c9d0-e1f2a3b4c5d6",
+		"name": "B-High API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "[Auth] Login (Professor)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"pm.environment.set(\"jwt_token_professor\", jsonData.access);",
+									"pm.environment.set(\"jwt_token\", jsonData.access);",
+									"console.log(\"Token de Professor salvo!\")"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"admin\",\n    \"password\": \"admin\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/token/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"token",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Auth] Login (Aluno)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"pm.environment.set(\"jwt_token_aluno\", jsonData.access);",
+									"pm.environment.set(\"jwt_token\", jsonData.access);",
+									"console.log(\"Token de Aluno salvo!\")"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"aluno_teste\",\n    \"password\": \"aluno123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/token/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"token",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Auth] Cadastrar Aluno",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"first_name\": \"Aluno\",\n    \"last_name\": \"Teste\",\n    \"email\": \"aluno@teste.com\",\n    \"username\": \"aluno_teste\",\n    \"password\": \"aluno123\",\n    \"is_staff\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/usuarios/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"usuarios",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Auth] Solicitar Cadastro (Professor)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"Professor\",\n    \"sobrenome\": \"Solicitante\",\n    \"email\": \"prof_solicitante@teste.com\",\n    \"username\": \"prof_solicitante\",\n    \"senha\": \"prof123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/solicitacoes-professor/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"solicitacoes-professor",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Professor",
+			"item": [
+				{
+					"name": "[Professor] Criar Aula (Upload de Vídeo)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token_professor}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{"key": "titulo", "value": "Aula de Teste (Upload)", "type": "text"},
+								{"key": "descricao", "value": "Descrição da aula", "type": "text"},
+								{"key": "data", "value": "2025-11-10", "type": "text"},
+								{"key": "hora", "value": "14:00", "type": "text"},
+								{"key": "agendada", "value": "false", "type": "text"},
+								{"key": "tipo_conteudo", "value": "video_upload", "type": "text"},
+								{"key": "arquivo", "type": "file", "src": []}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/aulas/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"aulas",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Professor] Criar Aula (Link Externo)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token_professor}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{"key": "titulo", "value": "Aula de Teste (Link)", "type": "text"},
+								{"key": "descricao", "value": "Descrição da aula", "type": "text"},
+								{"key": "data", "value": "2025-11-11", "type": "text"},
+								{"key": "hora", "value": "15:00", "type": "text"},
+								{"key": "agendada", "value": "false", "type": "text"},
+								{"key": "tipo_conteudo", "value": "video_url", "type": "text"},
+								{"key": "video_url", "value": "https://www.youtube.com/watch?v=exemplo", "type": "text"}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/aulas/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"aulas",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Professor] Listar Minhas Aulas",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token_professor}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/aulas/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"aulas",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Professor] Criar Quiz (PDF)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token_professor}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{"key": "title", "value": "Quiz de Teste (PDF)", "type": "text"},
+								{"key": "description", "value": "Descrição do quiz em PDF", "type": "text"},
+								{"key": "pdf", "type": "file", "src": []}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/quizzes/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"quizzes",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Professor] Criar Atividade",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token_professor}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{"key": "titulo", "value": "Atividade 1", "type": "text"},
+								{"key": "descricao", "value": "Descrição da atividade", "type": "text"},
+								{"key": "data_entrega", "value": "2025-11-20", "type": "text"},
+								{"key": "hora_entrega", "value": "23:59", "type": "text"},
+								{"key": "pontos", "value": "100", "type": "text"}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/atividades/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"atividades",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Aluno",
+			"item": [
+				{
+					"name": "[Aluno] Listar Aulas Disponíveis",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token_aluno}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/aulas-aluno/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"aulas-aluno",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Aluno] Listar Quizzes",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token_aluno}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/quizzes/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"quizzes",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Aluno] Enviar Resposta de Quiz (PDF)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token_aluno}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{"key": "comentario", "value": "Segue minha resposta.", "type": "text"},
+								{"key": "arquivo", "type": "file", "src": []}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/quizzes/1/submit/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"quizzes",
+								"1",
+								"submit",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "[Admin] Listar Solicitações",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token_professor}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/admin/solicitacoes-professor/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"solicitacoes-professor",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Admin] Aprovar Solicitação",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token_professor}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/admin/solicitacoes-professor/1/aprovar/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"solicitacoes-professor",
+								"1",
+								"aprovar",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

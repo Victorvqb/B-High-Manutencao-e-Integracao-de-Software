@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "../utils/axiosInstance";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
+import { AUTH_KEYS } from "../utils/constants"; // <-- IMPORTA AS CONSTANTES
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -31,68 +32,45 @@ export default function Login() {
       const isSuperuser = decoded.is_superuser === true || decoded.is_superuser === "true";
       const userFromBackend = decoded.username;
 
-      localStorage.setItem("access", access);
-      localStorage.setItem("refresh", refresh);
-      localStorage.setItem("username", userFromBackend);
-      localStorage.setItem("is_staff", JSON.stringify(isStaff));
-      localStorage.setItem("is_superuser", JSON.stringify(isSuperuser));
-      localStorage.removeItem("fotoPerfil");
+      // --- INÍCIO DA MODIFICAÇÃO (Magic Strings) ---
+      localStorage.setItem(AUTH_KEYS.ACCESS, access);
+      localStorage.setItem(AUTH_KEYS.REFRESH, refresh);
+      localStorage.setItem(AUTH_KEYS.USERNAME, userFromBackend);
+      localStorage.setItem(AUTH_KEYS.IS_STAFF, JSON.stringify(isStaff));
+      localStorage.setItem(AUTH_KEYS.IS_SUPERUSER, JSON.stringify(isSuperuser));
+      localStorage.removeItem(AUTH_KEYS.FOTO_PERFIL);
+      // --- FIM DA MODIFICAÇÃO ---
 
       if (souAdmin) {
         if (isSuperuser && userFromBackend === "admin") {
           window.location.href = "/admin-dashboard";
+        } else if (isStaff) {
+          window.location.href = "/professor";
         } else {
-          localStorage.removeItem("refresh");
-          setErroLogin("❌ Você não é um administrador.");
+          setErroLogin("Você não tem permissão de administrador.");
+          localStorage.clear();
         }
-        return;
-      }
-
-      if (isSuperuser) {
-        window.location.href = "/admin-dashboard";
-      } else if (isStaff) {
-        window.location.href = "/professor";
       } else {
-        window.location.href = "/";
+        window.location.href = "/home";
       }
-    } catch (error) {
-      console.error("Erro no login:", error);
-
-      let msg = "❌ Usuário ou senha incorretos.";
-      const detail = error.response?.data?.detail;
-
-      if (detail === "No active account found with the given credentials") {
-        msg = "❌ Conta não encontrada ou credenciais inválidas.";
-      } else if (detail) {
-        msg = "❌ " + detail;
-      }
-
-      setErroLogin(msg);
+    } catch (err) {
+      setErroLogin("Usuário ou senha inválidos.");
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
-      <div className="bg-white dark:bg-gray-800 p-8 border border-gray-300 dark:border-gray-700 rounded-md shadow-md w-full max-w-md">
-        <h1 className="text-3xl font-semibold text-gray-800 dark:text-white mb-1">
-          B-High<span className="text-green-500">Education</span>
+    <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-gray-900">
+      <div className="w-full max-w-md rounded-lg bg-white dark:bg-gray-800 p-6 shadow-md">
+        <h1 className="mb-6 text-center text-3xl font-bold text-green-600 dark:text-green-400">
+          B-High Education
         </h1>
-        <p className="text-black dark:text-gray-300 text-base mb-1">
-          Entre com sua conta
-        </p>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
-          Informe seu usuário e senha para entrar
-        </p>
-
         {erroLogin && (
-          <div className="text-red-700 bg-red-100 dark:bg-red-900/50 dark:text-red-300 border border-red-300 dark:border-red-600 px-4 py-2 rounded text-center mb-4 text-sm">
+          <div className="mb-4 rounded-md bg-red-100 p-3 text-center text-sm text-red-700 dark:bg-red-900 dark:text-red-200">
             {erroLogin}
           </div>
         )}
-
         <input
           className="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-black dark:text-white rounded-md px-3 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-green-500"
-          type="text"
           placeholder="Usuário"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
@@ -132,7 +110,7 @@ export default function Login() {
           onClick={() => navigate("/cadastro")}
           className="w-full border border-gray-400 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 text-black dark:text-white py-2 rounded-md"
         >
-          Criar conta
+          Cadastrar-se
         </button>
       </div>
     </div>

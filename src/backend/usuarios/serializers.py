@@ -63,11 +63,21 @@ class UsuarioSerializer(serializers.ModelSerializer):
 class AulaSerializer(serializers.ModelSerializer):
     arquivo = serializers.FileField(use_url=True, required=False)
     agendada = serializers.BooleanField(required=False)
+    
+    # --- INÍCIO DA MODIFICAÇÃO (MIGRAÇÃO DE API) ---
+    # Adicionamos o 'source' para obter o "display name" (ex: "Upload de Vídeo")
+    tipo_conteudo_display = serializers.CharField(source='get_tipo_conteudo_display', read_only=True)
 
     class Meta:
         model = Aula
-        fields = "__all__"
+        # Adicionado "tipo_conteudo" e "tipo_conteudo_display"
+        fields = [
+            "id", "titulo", "descricao", "tipo_conteudo", "tipo_conteudo_display",
+            "video_url", "arquivo", "data", "hora", "agendada", 
+            "professor", "criada_em"
+        ]
         extra_kwargs = { "professor": {"read_only": True} }
+    # --- FIM DA MODIFICAÇÃO ---
 
 # ─── Entrega ─────────────────────────────
 class EntregaSerializer(serializers.ModelSerializer):

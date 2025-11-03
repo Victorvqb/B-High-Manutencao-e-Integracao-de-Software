@@ -27,38 +27,62 @@ import YouTubeVideos from "./pages/YouTubeVideos";
 import TermosDeUso from "./pages/TermosDeUso";
 import PoliticaDePrivacidade from "./pages/PoliticaDePrivacidade";
 import Configuracoes from "./pages/Configuracoes";
+import { AUTH_KEYS } from "./utils/constants"; // <-- IMPORTA AS CONSTANTES
 
+// --- INÍCIO DA MODIFICAÇÃO (Magic Strings) ---
 function ProtectedRoute({ children }) {
-  const token = localStorage.getItem("access");
-  if (!token) { return <Navigate to="/login" replace />; }
-  try { jwtDecode(token); } catch { return <Navigate to="/login" replace />; }
+  const token = localStorage.getItem(AUTH_KEYS.ACCESS); // <-- USA CONSTANTE
+  if (!token) {
+    return <Navigate to="/login" replace />;
+  }
   return children;
 }
 
 function RedirectRoot() {
-  const token = localStorage.getItem("access");
-  if (!token) { return <Navigate to="/login" replace />; }
+  const token = localStorage.getItem(AUTH_KEYS.ACCESS); // <-- USA CONSTANTE
+  if (!token) {
+    return <Navigate to="/login" replace />;
+  }
+  
   try {
     const decoded = jwtDecode(token);
     const isStaff = decoded.is_staff === true || decoded.is_staff === "true";
-    if (isStaff) { return <Navigate to="/professor" replace />; }
-    return <Navigate to="/home" replace />;
-  } catch { return <Navigate to="/login" replace />; }
+    const isSuperuser = decoded.is_superuser === true || decoded.is_superuser === "true";
+    
+    if (isSuperuser) {
+      return <Navigate to="/admin-dashboard" replace />;
+    } else if (isStaff) {
+      return <Navigate to="/professor" replace />;
+    } else {
+      return <Navigate to="/home" replace />;
+    }
+  } catch (e) {
+    localStorage.clear();
+    return <Navigate to="/login" replace />;
+  }
 }
+// --- FIM DA MODIFICAÇÃO ---
 
 export default function App() {
-  useEffect(() => { document.body.classList.add("dark"); }, []);
+  useEffect(() => {
+    // Define o tema com base no localStorage ou preferência do sistema
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, []);
 
   return (
     <Router>
       <Routes>
+        <Route path="/" element={<RedirectRoot />} />
         <Route path="/login" element={<Login />} />
         <Route path="/cadastro" element={<Cadastro />} />
         <Route path="/recuperar-senha" element={<RecuperarSenha />} />
-        <Route path="/" element={<RedirectRoot />} />
         <Route path="/termos-de-uso" element={<TermosDeUso />} />
         <Route path="/politica-de-privacidade" element={<PoliticaDePrivacidade />} />
-
+        
         <Route element={<ProtectedRoute><LayoutComSidebar /></ProtectedRoute>}>
           <Route path="/youtube-videos" element={<YouTubeVideos />} />
           <Route path="/home" element={<Home />} />

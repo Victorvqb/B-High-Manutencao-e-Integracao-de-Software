@@ -1,4 +1,5 @@
 import os
+from .services import ProfessorApprovalService
 from django.utils import timezone
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -53,7 +54,13 @@ from .serializers import (
     YouTubeVideoSerializer,
 )
 
-# ─── Entregas ──────────────────────────────
+# --- INÍCIO DA REFATORAÇÃO 5 (Introduce Constant) ---
+YOUTUBE_CHANNEL_ID = 'UC_x5XG1OV2P6uZZ5FSM9Ttw'
+YOUTUBE_CACHE_KEY = 'youtube_videos'
+# --- FIM DA REFATORAÇÃO 5 ---
+
+
+#  Entregas 
 class EntregaView(generics.CreateAPIView):
     queryset = Entrega.objects.all()
     serializer_class = EntregaSerializer
@@ -61,7 +68,7 @@ class EntregaView(generics.CreateAPIView):
     def perform_create(self, serializer):
         serializer.save(aluno=self.request.user)
 
-# ─── Aulas ────────────────────────────────
+#  Aulas 
 class HomeMetricsView(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request):
@@ -103,7 +110,26 @@ class AulaView(ListCreateAPIView):
     parser_classes = [MultiPartParser]
     def perform_create(self, serializer):
         agendada = self.request.data.get("agendada", "false").lower() == "true"
-        serializer.save(professor=self.request.user, agendada=agendada)
+        
+        # Lógica da Migração de API (Nova Funcionalidade)
+        tipo_conteudo = self.request.data.get("tipo_conteudo", "undefined")
+        if tipo_conteudo == 'undefined':
+            if self.request.data.get("video_url"):
+                tipo_conteudo = 'video_url'
+            elif self.request.FILES.get("arquivo"):
+                arquivo = self.request.FILES.get("arquivo")
+                ext = arquivo.name.split('.')[-1].lower()
+                if ext == 'pdf':
+                    tipo_conteudo = 'pdf'
+                elif ext in ['mp4', 'mov']:
+                    tipo_conteudo = 'video_upload'
+        
+        serializer.save(
+            professor=self.request.user, 
+            agendada=agendada,
+            tipo_conteudo=tipo_conteudo
+        )
+
 
 class AulaDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = AulaSerializer
@@ -130,7 +156,7 @@ class AulasDisponiveisView(ListAPIView):
             Q(agendada=True, data=agora.date(), hora__lte=agora.time())
         )
 
-# ─── Quizzes ──────────────────────────────
+#  Quizzes 
 class QuizListCreateView(generics.ListCreateAPIView):
     queryset = Quiz.objects.all().order_by('-created_at')
     serializer_class = QuizSerializer
@@ -168,15 +194,14 @@ class RespostaQuizView(ListAPIView):
     def get_queryset(self):
         return RespostaQuiz.objects.filter(aluno=self.request.user)
 
+# --- INÍCIO DA REFATORAÇÃO 1: Extract Method ---
 class QuizSubmitView(APIView):
     permission_classes = [permissions.IsAuthenticated]
-    def post(self, request, pk):
-        quiz = Quiz.objects.filter(pk=pk).first()
-        if not quiz:
-            return Response({"error": "Quiz não encontrado"}, status=404)
-        respostas = request.data.get("answers", {})
-        comentario = request.data.get("comentario", "")
-        arquivo = request.FILES.get("arquivo")
+
+    def _calculate_score(self, respostas):
+        """
+        Método extraído para calcular a pontuação com base nas respostas.
+        """
         acertos = 0
         for question_id, alternativa_id in respostas.items():
             try:
@@ -185,15 +210,36 @@ class QuizSubmitView(APIView):
                     acertos += 1
             except Alternativa.DoesNotExist:
                 continue
+        return acertos
+
+    def post(self, request, pk):
+        quiz = Quiz.objects.filter(pk=pk).first()
+        if not quiz:
+            return Response({"error": "Quiz não encontrado"}, status=404)
+        
+        respostas = request.data.get("answers", {})
+        comentario = request.data.get("comentario", "")
+        arquivo = request.FILES.get("arquivo")
+        
+        # Lógica de cálculo agora está encapsulada
+        acertos = self._calculate_score(respostas)
+            
         entrega = Entrega.objects.create(
-            aluno=request.user, quiz=quiz, arquivo=arquivo, comentario=comentario
+            aluno=request.user, 
+            quiz=quiz, 
+            arquivo=arquivo, 
+            comentario=comentario,
+            aula_id=quiz.entregas.first().aula_id if quiz.entregas.exists() else None 
         )
+        
         RespostaQuiz.objects.create(
             aluno=request.user, quiz=quiz, resposta=respostas, nota=acertos
         )
         return Response({"message": "Respostas enviadas.", "score": acertos})
+# --- FIM DA REFATORAÇÃO 1 ---
 
-# ─── Usuários ─────────────────────────────
+
+#  Usuários 
 class AlunoListView(ListAPIView):
     serializer_class = UsuarioSerializer
     permission_classes = [IsAuthenticated]
@@ -207,7 +253,7 @@ class UsuarioListCreateView(ListCreateAPIView):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         if not serializer.is_valid():
-            print("🚨 Erros de validação no cadastro:", serializer.errors)
+            print(" Erros de validação no cadastro:", serializer.errors)
             return Response(serializer.errors, status=400)
         self.perform_create(serializer)
         return Response(serializer.data, status=201)
@@ -240,7 +286,7 @@ class ChangePasswordView(APIView):
         user.save()
         return Response({"detail": "Senha alterada com sucesso!"}, status=status.HTTP_200_OK)
 
-# ─── Foto Perfil ──────────────────────────
+#  Foto Perfil 
 class AtualizarFotoPerfilView(APIView):
     parser_classes = [MultiPartParser]
     permission_classes = [IsAuthenticated]
@@ -250,7 +296,7 @@ class AtualizarFotoPerfilView(APIView):
         user.save()
         return Response({"foto_url": user.foto_perfil.url})
 
-# ─── Login/Token ──────────────────────────
+#  Login/Token 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
 
@@ -261,7 +307,7 @@ class LoginView(APIView):
             return Response(serializer.validated_data)
         return Response(serializer.errors, status=400)
 
-# ─── Atividade View ───────────────────────────────────
+#  Atividade View 
 class AtividadeView(ListCreateAPIView):
     serializer_class = AtividadeSerializer
     permission_classes = [IsAuthenticated]
@@ -287,19 +333,13 @@ class AtividadeDetailView(RetrieveUpdateDestroyAPIView):
         user = self.request.user
         return Atividade.objects.filter(professor=user) if user.is_staff else Atividade.objects.all()
 
-class EnviarAtividadeView(APIView):
-    def post(self, request, *args, **kwargs):
-        if 'arquivo' not in request.FILES:
-            return Response({"detail": "Arquivo é necessário!"}, status=status.HTTP_400_BAD_REQUEST)
-        arquivo = request.FILES['arquivo']
-        quiz = request.data.get('quiz')
-        comentario = request.data.get('comentario')
-        entrega = Entrega.objects.create(
-            quiz_id=quiz, comentario=comentario, arquivo=arquivo,
-        )
-        return Response({"message": "Atividade recebida!"}, status=status.HTTP_200_OK)
+# --- REFATORAÇÃO 3: Remove Dead Code ---
+# A view 'EnviarAtividadeView' foi removida.
+# A lógica de entrega é tratada por 'EntregaView'.
+# --- FIM DA REFATORAÇÃO 3 ---
 
-# ─── Fórum ────────────────────────────────
+
+#  Fórum 
 class ForumAPIView(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request):
@@ -332,7 +372,7 @@ class ResponderComentarioAPIView(APIView):
         )
         return Response({"id": resposta.id})
 
-# ─── Desempenho ───────────────────────────
+#  Desempenho 
 class DesempenhoCreateListView(ListCreateAPIView):
     serializer_class = DesempenhoSerializer
     permission_classes = [IsAuthenticated]
@@ -345,52 +385,60 @@ class DesempenhoDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = DesempenhoSerializer
     permission_classes = [IsAuthenticated]
 
-# ─── Solicitação de Professores ───────────
+#  Solicitação de Professores 
 class SolicitacaoProfessorCreateView(ListCreateAPIView):
     queryset = SolicitacaoProfessor.objects.all()
     serializer_class = SolicitacaoProfessorSerializer
     permission_classes = [AllowAny]
 
+# --- INÍCIO DA REFATORAÇÃO DE DESIGN (Facade) ---
 class SolicitacaoProfessorAdminViewSet(viewsets.ViewSet):
     permission_classes = [IsAdminUser]
+    
     def list(self, request):
         queryset = SolicitacaoProfessor.objects.all()
         serializer = SolicitacaoProfessorSerializer(queryset, many=True)
         return Response(serializer.data)
+    
     @action(detail=True, methods=["post"])
     def aprovar(self, request, pk=None):
         solicitacao = SolicitacaoProfessor.objects.filter(pk=pk).first()
         if not solicitacao:
             return Response({"detail": "Não encontrada"}, status=404)
-        if solicitacao.aprovado:
-            return Response({"detail": "Já aprovada"}, status=400)
-        Usuario.objects.create_user(
-            username=solicitacao.username, password=solicitacao.senha,
-            email=solicitacao.email, first_name=solicitacao.nome,
-            last_name=solicitacao.sobrenome, is_staff=True, is_active=True,
-        )
-        solicitacao.aprovado = True
-        solicitacao.save()
-        return Response({"detail": "Aprovada"})
+
+        # Lógica de negócio movida para a Facade
+        success, message = ProfessorApprovalService.approve(solicitacao)
+        
+        if not success:
+            return Response({"detail": message}, status=400)
+        
+        return Response({"detail": message})
+    
     @action(detail=True, methods=["post"])
     def rejeitar(self, request, pk=None):
         solicitacao = SolicitacaoProfessor.objects.filter(pk=pk).first()
         if not solicitacao:
             return Response({"detail": "Não encontrada"}, status=404)
-        solicitacao.delete()
-        return Response({"detail": "Rejeitada"})
+        
+        if not solicitacao.aprovado:
+            solicitacao.delete()
+            return Response({"detail": "Rejeitada"})
+        else:
+            return Response({"detail": "Não é possível rejeitar uma solicitação já aprovada."}, status=400)
+# --- FIM DA REFATORAÇÃO DE DESIGN ---
 
-# ─── YouTube Videos ───────────────────────────────────────────
+#  YouTube Videos 
 class YouTubeVideosView(APIView):
     permission_classes = [AllowAny]
     def get(self, request, *args, **kwargs):
         YOUTUBE_API_KEY = os.getenv('YOUTUBE_API_KEY')
-        CHANNEL_ID = 'UC_x5XG1OV2P6uZZ5FSM9Ttw' 
-        CACHE_KEY = 'youtube_videos'
+      
+        # --- INÍCIO DA REFATORAÇÃO 4 (Introduce Constant) ---
+        cached_videos = cache.get(YOUTUBE_CACHE_KEY)
+        # --- FIM DA REFATORAÇÃO 4 ---
         
-        cached_videos = cache.get(CACHE_KEY)
         if cached_videos:
-            print("🎬 Servindo vídeos do YouTube a partir do cache.")
+            print(" Servindo vídeos do YouTube a partir do cache.")
             return Response(cached_videos)
 
         if not YOUTUBE_API_KEY:
@@ -399,12 +447,16 @@ class YouTubeVideosView(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
         try:
-            print("🎬 Buscando vídeos novos da API do YouTube...")
+            print(" Buscando vídeos novos da API do YouTube...")
             youtube = build('youtube', 'v3', developerKey=YOUTUBE_API_KEY)
+            
+            # --- INÍCIO DA REFATORAÇÃO 4 (Introduce Constant) ---
             search_response = youtube.search().list(
-                channelId=CHANNEL_ID, part='snippet', maxResults=6,
+                channelId=YOUTUBE_CHANNEL_ID, part='snippet', maxResults=6,
                 order='date', type='video'
             ).execute()
+            # --- FIM DA REFATORAÇÃO 4 ---
+            
             videos = []
             for item in search_response.get('items', []):
                 video_data = {
@@ -412,22 +464,25 @@ class YouTubeVideosView(APIView):
                     'video_id': item['id']['videoId'],
                     'thumbnail_url': item['snippet']['thumbnails']['high']['url']
                 }
-                videos.append(video_data)
+                
+            videos.append(video_data)
             serializer = YouTubeVideoSerializer(data=videos, many=True)
             serializer.is_valid(raise_exception=True)
-            cache.set(CACHE_KEY, serializer.data, timeout=3600)
+            
+            # --- INÍCIO DA REFATORAÇÃO 4 (Introduce Constant) ---
+            cache.set(YOUTUBE_CACHE_KEY, serializer.data, timeout=3600) # Cache por 1 hora
+            # --- FIM DA REFATORAÇÃO 4 ---
+            
             return Response(serializer.data)
         except Exception as e:
-            # ADICIONE APENAS ESTA LINHA DENTRO DO BLOCO "except"
-            print(f"❌ ERRO DETALhado DA API DO YOUTUBE: {e}") 
-            
-            print(f"❌ Erro ao buscar vídeos do YouTube: {e}")
+            print(f" ERRO DETALhado DA API DO YOUTUBE: {e}") 
+            print(f" Erro ao buscar vídeos do YouTube: {e}")
             return Response(
                 {"error": "Ocorreu um erro ao buscar os vídeos do YouTube."},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
             
-            # ─── Exclusão de Conta (LGPD) ───────────────────────────────────
+#  Exclusão de Conta (LGPD) 
 class DeleteUserAccountView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -447,10 +502,8 @@ class DeleteUserAccountView(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
         
-        # Log anonimizado antes de apagar, como planeado na ata
         print(f"[LGPD LOG] Utilizador com ID {user.id} solicitou exclusão e foi apagado em {timezone.now()}")
         
-        # Apaga o utilizador permanentemente
         user.delete()
         
         return Response(

@@ -6,7 +6,6 @@ from django.core.exceptions import ValidationError
 # ─── Usuário ───────────────────────────────────────────────────
 class Usuario(AbstractUser):
     foto_perfil = models.ImageField(upload_to="fotos_perfil/", null=True, blank=True)
-    # VVVVVV ADICIONE O CAMPO ABAIXO VVVVVV
     consent_timestamp = models.DateTimeField(null=True, blank=True, help_text="Timestamp of user consent to terms.")
 
     def __str__(self):
@@ -15,27 +14,80 @@ class Usuario(AbstractUser):
 
 # ─── Aulas ─────────────────────────────────────────────────────
 def validate_video(value):
-    file_extension = value.name.split('.')[-1]
+    file_extension = value.name.split('.')[-1].lower()
     if file_extension not in ['mp4', 'mov']:
         raise ValidationError('Arquivo de vídeo inválido. Use arquivos .mp4 ou .mov.')
 
-# Função de validação para PDF
 def validate_pdf(value):
     file_extension = value.name.split('.')[-1].lower()
     if file_extension != 'pdf':
         raise ValidationError('Arquivo inválido. Apenas arquivos PDF são permitidos.')
 
+def validate_aula_arquivo(value):
+    """Validador único que aceita vídeo OU PDF."""
+    file_extension = value.name.split('.')[-1].lower()
+    if file_extension not in ['mp4', 'mov', 'pdf']:
+        raise ValidationError('Tipo de arquivo inválido. Use .mp4, .mov ou .pdf.')
+
+
 class Aula(models.Model):
     """Modelo de Aulas Postadas por Professores"""
+
+    # --- INÍCIO DA MODIFICAÇÃO (MIGRAÇÃO DE API) ---
+    class TipoConteudo(models.TextChoices):
+        URL_EXTERNA = 'video_url', 'Link de Vídeo Externo'
+        UPLOAD_VIDEO = 'video_upload', 'Upload de Vídeo'
+        ARQUIVO_PDF = 'pdf', 'Documento PDF'
+        INDEFINIDO = 'undefined', 'Indefinido'
+
     titulo = models.CharField(max_length=100)
     descricao = models.TextField(blank=True)
-    video_url = models.URLField(blank=True)
-    arquivo = models.FileField(upload_to="aulas/", blank=True, null=True, validators=[validate_video])
+    
+    tipo_conteudo = models.CharField(
+        max_length=20,
+        choices=TipoConteudo.choices,
+        default=TipoConteudo.INDEFINIDO,
+        help_text="Define se a aula é um link, um vídeo ou um PDF."
+    )
+    
+    video_url = models.URLField(
+        blank=True, 
+        help_text="Use para links do YouTube, Vimeo, etc. (se tipo_conteudo='video_url')"
+    )
+    arquivo = models.FileField(
+        upload_to="aulas_uploads/", # Nova pasta para uploads
+        blank=True, 
+        null=True, 
+        validators=[validate_aula_arquivo], # Validador unificado
+        help_text="Use para uploads de .mp4, .mov ou .pdf"
+    )
+    # --- FIM DA MODIFICAÇÃO ---
+    
     data = models.DateField()
     hora = models.TimeField()
     agendada = models.BooleanField(default=False)
     professor = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name="aulas")
     criada_em = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        # Limpa o campo desnecessário
+        if self.tipo_conteudo == 'video_url':
+            self.arquivo = None
+        elif self.tipo_conteudo in ['video_upload', 'pdf']:
+            self.video_url = ''
+        
+        # Define o tipo com base nos dados, se ainda for indefinido
+        if self.tipo_conteudo == 'undefined':
+            if self.video_url:
+                self.tipo_conteudo = self.TipoConteudo.URL_EXTERNA
+            elif self.arquivo:
+                ext = self.arquivo.name.split('.')[-1].lower()
+                if ext == 'pdf':
+                    self.tipo_conteudo = self.TipoConteudo.ARQUIVO_PDF
+                elif ext in ['mp4', 'mov']:
+                    self.tipo_conteudo = self.TipoConteudo.UPLOAD_VIDEO
+        
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.titulo} - {self.professor.username}"

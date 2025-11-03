@@ -12,11 +12,15 @@ export default function GerenciarAulasModal({ isOpen, onClose }) {
   const [descricao, setDescricao] = useState("");
   const [data, setData] = useState("");
   const [hora, setHora] = useState("");
-  const [arquivo, setArquivo] = useState(null); // Alterado para 'arquivo', que agora pode ser qualquer tipo de mídia
-  const [agendada, setAgendada] = useState(false);
   
+  // --- INÍCIO DAS MODIFICAÇÕES (MIGRAÇÃO DE API) ---
+  const [tipoConteudo, setTipoConteudo] = useState("video_url"); // Padrão é link
+  const [videoUrl, setVideoUrl] = useState(""); // Campo separado para URL
+  const [arquivo, setArquivo] = useState(null); 
+  // --- FIM DAS MODIFICAÇÕES ---
+
   const [erros, setErros] = useState({});
-  const [carregando, setCarregando] = useState(false); // Estado de carregamento
+  const [carregando, setCarregando] = useState(false);
 
   const recarregarAulas = async () => {
     try {
@@ -27,22 +31,37 @@ export default function GerenciarAulasModal({ isOpen, onClose }) {
     }
   };
 
+  const apagarAula = async (id) => {
+    if (!window.confirm("Tem certeza que deseja apagar esta aula?")) return;
+    try {
+      await axiosInstance.delete(`aulas/${id}/`);
+      recarregarAulas();
+    } catch {
+      alert("Erro ao apagar aula.");
+    }
+  };
+
   const validarCampos = () => {
     const novosErros = {};
     if (!titulo.trim()) novosErros.titulo = true;
-    if (!descricao.trim()) novosErros.descricao = true;
     if (!data.trim()) novosErros.data = true;
     if (!hora.trim()) novosErros.hora = true;
-    if (!arquivo) novosErros.arquivo = true; // Alterado para verificar o arquivo, seja PDF ou Vídeo
+
+    // Validação específica do tipo de conteúdo
+    if (tipoConteudo === "video_url" && !videoUrl.trim()) {
+        novosErros.videoUrl = true;
+    } else if (tipoConteudo !== "video_url" && !arquivo) {
+        novosErros.arquivo = true;
+    }
+    
     setErros(novosErros);
     return Object.keys(novosErros).length === 0;
   };
 
   const publicarAula = async (e) => {
     e.preventDefault();
-    if (!validarCampos() || carregando) return; // Não permite o envio de múltiplos arquivos
-
-    setCarregando(true); // Inicia o carregamento
+    if (!validarCampos() || carregando) return;
+    setCarregando(true);
 
     const fd = new FormData();
     fd.append("titulo", titulo);
@@ -50,39 +69,44 @@ export default function GerenciarAulasModal({ isOpen, onClose }) {
     fd.append("data", data);
     fd.append("hora", hora);
     fd.append("agendada", aba === "agendar" ? "true" : "false");
-
-    // Adicionando a verificação para qualquer tipo de arquivo
-    if (arquivo) fd.append("arquivo", arquivo);
+    
+    // --- LÓGICA DE UPLOAD ATUALIZADA ---
+    fd.append("tipo_conteudo", tipoConteudo);
+    if (tipoConteudo === "video_url") {
+      fd.append("video_url", videoUrl);
+    } else {
+      if (arquivo) fd.append("arquivo", arquivo);
+    }
+    // --- FIM DA LÓGICA ---
 
     try {
       await axiosInstance.post("aulas/", fd);
       alert("Aula publicada!");
       recarregarAulas();
       setAba("listar");
+      // Resetar todos os campos
       setTitulo("");
       setDescricao("");
       setData("");
       setHora("");
       setArquivo(null);
-      setAgendada(false);
+      setVideoUrl("");
+      setTipoConteudo("video_url");
       setErros({});
     } catch (err) {
       console.error("Erro ao publicar aula:", err.response?.data || err);
       alert("Erro ao publicar aula. Verifique os campos obrigatórios.");
     } finally {
-      setCarregando(false); // Finaliza o carregamento
+      setCarregando(false);
     }
   };
 
-  const apagarAula = async (id) => {
-    if (!window.confirm("Apagar esta aula?")) return;
-    await axiosInstance.delete(`aulas/${id}/`);
-    recarregarAulas();
-  };
-
+  // Carrega as aulas quando o modal abre e a aba "listar" está ativa
   useEffect(() => {
-    recarregarAulas();
-  }, []);
+    if (isOpen && aba === "listar") {
+      recarregarAulas();
+    }
+  }, [isOpen, aba]);
 
   if (!isOpen) return null;
 
@@ -98,70 +122,83 @@ export default function GerenciarAulasModal({ isOpen, onClose }) {
       <div className="relative flex h-[80vh] w-full max-w-3xl flex-col rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white shadow-xl">
         <button
           onClick={onClose}
-          className="absolute right-4 top-3 text-lg text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-white"
+          className="absolute top-3 right-3 z-10 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
         >
-          ✖
+          ✕
         </button>
 
-        <div className="flex flex-wrap gap-2 border-b border-gray-200 dark:border-gray-700 p-4">
-          {["listar", "aula", "agendar"].map((key) => (
-            <button
-              key={key}
-              onClick={() => setAba(key)}
-              className={`rounded px-3 py-1 text-sm font-medium ${
-                aba === key
-                  ? "bg-green-600 text-white"
-                  : "bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white"
-              }`}
-            >
-              {key === "listar"
-                ? "Ver aulas publicadas"
-                : key === "aula"
-                ? "Publicar aula"
-                : "Agendar aula"}
-            </button>
-          ))}
+        <div className="flex border-b border-gray-200 dark:border-gray-700">
+          <button
+            onClick={() => setAba("listar")}
+            className={`flex-1 p-3 font-medium ${
+              aba === "listar"
+                ? "border-b-2 border-green-600 text-green-600"
+                : "text-gray-500 dark:text-gray-400"
+            }`}
+          >
+            Listar Aulas
+          </button>
+          <button
+            onClick={() => setAba("aula")}
+            className={`flex-1 p-3 font-medium ${
+              aba === "aula"
+                ? "border-b-2 border-green-600 text-green-600"
+                : "text-gray-500 dark:text-gray-400"
+            }`}
+          >
+            Publicar Aula
+          </button>
+          <button
+            onClick={() => setAba("agendar")}
+            className={`flex-1 p-3 font-medium ${
+              aba === "agendar"
+                ? "border-b-2 border-green-600 text-green-600"
+                : "text-gray-500 dark:text-gray-400"
+            }`}
+          >
+            Agendar Aula
+          </button>
         </div>
-
+        
         <div className="flex-1 overflow-y-auto p-5">
           {aba === "listar" && (
             <div className="space-y-3">
-              {aulas.length === 0 ? (
-                <p className="text-gray-600 dark:text-gray-300">
-                  Nenhuma aula cadastrada.
-                </p>
-              ) : (
-                aulas.map((a) => (
-                  <div
-                    key={a.id}
-                    className="rounded border border-green-300 bg-green-50 dark:bg-gray-700 p-3 shadow"
-                  >
-                    <p className="font-semibold">{a.titulo}</p>
-                    <p className="mb-2 text-sm text-gray-600 dark:text-gray-300">
-                      Agendada para {dayjs(a.data).format("DD/MM/YYYY")}
+              {aulas.map((aula) => (
+                <div
+                  key={aula.id}
+                  className="flex items-center justify-between rounded border border-gray-200 dark:border-gray-700 p-3"
+                >
+                  <div>
+                    <p className="font-semibold">{aula.titulo}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      {dayjs(aula.data).format("DD/MM/YYYY")} - {aula.hora}
                     </p>
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => setEditAula(a)}
-                        className="rounded bg-yellow-500 hover:bg-yellow-600 px-3 py-1 text-white"
-                      >
-                        Editar
-                      </button>
-                      <button
-                        onClick={() => apagarAula(a.id)}
-                        className="rounded bg-red-600 hover:bg-red-700 px-3 py-1 text-white"
-                      >
-                        Apagar
-                      </button>
-                    </div>
                   </div>
-                ))
-              )}
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setEditAula(aula)}
+                      className="text-sm text-blue-600 hover:underline"
+                    >
+                      Editar
+                    </button>
+                    <button
+                      onClick={() => apagarAula(aula.id)}
+                      className="text-sm text-red-600 hover:underline"
+                    >
+                      Apagar
+                    </button>
+                  </div>
+                </div>
+              ))}
             </div>
           )}
 
           {(aba === "aula" || aba === "agendar") && (
             <form onSubmit={publicarAula} className="space-y-3">
+              <h2 className="text-xl font-semibold text-green-600 dark:text-green-400">
+                {aba === "agendar" ? "Agendar Nova Aula" : "Publicar Nova Aula"}
+              </h2>
+              
               <input
                 value={titulo}
                 onChange={(e) => setTitulo(e.target.value)}
@@ -176,7 +213,6 @@ export default function GerenciarAulasModal({ isOpen, onClose }) {
                 className={inputClass(erros.descricao)}
                 placeholder="Descrição"
               />
-              {erros.descricao && <p className="text-sm text-red-500">Preencha a descrição</p>}
 
               <input
                 type="date"
@@ -194,20 +230,47 @@ export default function GerenciarAulasModal({ isOpen, onClose }) {
               />
               {erros.hora && <p className="text-sm text-red-500">Preencha o horário</p>}
 
-              <input
-                type="file"
-                accept=".pdf, .mp4, .mov"
-                className={`w-full text-sm ${erros.arquivo ? "border-red-500 border rounded" : ""}`}
-                onChange={(e) => setArquivo(e.target.files[0])}
-              />
-              {erros.arquivo && <p className="text-sm text-red-500">Escolha um arquivo válido (PDF ou Vídeo)</p>}
+              {/* --- INÍCIO DO SELETOR DE CONTEÚDO (MIGRAÇÃO API) --- */}
+              <select
+                value={tipoConteudo}
+                onChange={(e) => setTipoConteudo(e.target.value)}
+                className={inputClass(erros.tipoConteudo)}
+              >
+                <option value="video_url">Link de Vídeo Externo (YouTube, etc.)</option>
+                <option value="video_upload">Upload de Vídeo (.mp4, .mov)</option>
+                <option value="pdf">Upload de Documento (.pdf)</option>
+              </select>
+
+              {tipoConteudo === "video_url" ? (
+                <div>
+                  <input
+                    type="url"
+                    value={videoUrl}
+                    onChange={(e) => setVideoUrl(e.target.value)}
+                    className={inputClass(erros.videoUrl)}
+                    placeholder="https://youtube.com/watch?v=..."
+                  />
+                  {erros.videoUrl && <p className="text-sm text-red-500">Insira um link válido</p>}
+                </div>
+              ) : (
+                <div>
+                  <input
+                    type="file"
+                    accept={tipoConteudo === "video_upload" ? ".mp4,.mov" : ".pdf"}
+                    className={`w-full text-sm ${erros.arquivo ? "border-red-500 border rounded" : ""}`}
+                    onChange={(e) => setArquivo(e.target.files[0])}
+                  />
+                  {erros.arquivo && <p className="text-sm text-red-500">Escolha um arquivo válido</p>}
+                </div>
+              )}
+              {/* --- FIM DO SELETOR DE CONTEÚDO --- */}
 
               <button
                 className="rounded bg-green-600 hover:bg-green-700 px-4 py-2 font-medium text-white"
-                disabled={carregando} // Desabilita o botão enquanto carrega
+                disabled={carregando}
               >
                 {carregando ? (
-                  <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-white"></div> // Adiciona a animação de carregamento
+                  <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-white"></div>
                 ) : (
                   aba === "agendar" ? "Agendar Aula" : "Publicar Aula"
                 )}

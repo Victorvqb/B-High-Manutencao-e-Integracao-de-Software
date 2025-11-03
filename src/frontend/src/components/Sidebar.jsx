@@ -3,10 +3,11 @@ import { useLocation, useNavigate, Link } from "react-router-dom";
 import {
   FaHome, FaBookOpen, FaPuzzlePiece, FaClipboardCheck,
   FaComments, FaChartBar, FaSignOutAlt, FaCamera,
-  FaBars, FaTimes, FaYoutube, FaCog // Adicione FaCog para o ícone de configurações
+  FaBars, FaTimes, FaYoutube, FaCog
 } from "react-icons/fa";
 import { jwtDecode } from "jwt-decode";
 import axiosInstance from "../utils/axiosInstance";
+import { AUTH_KEYS } from "../utils/constants"; // <-- REFATORAÇÃO 2 MANTIDA
 
 export default function Sidebar({ isStaff: propIsStaff, isAluno: propIsAluno }) {
   const location = useLocation();
@@ -14,10 +15,11 @@ export default function Sidebar({ isStaff: propIsStaff, isAluno: propIsAluno }) 
   const fileInputRef = useRef();
   const [menuOpen, setMenuOpen] = useState(false);
 
+  // --- INÍCIO DA REFATORAÇÃO 2 (Magic Strings) ---
   const isStaff = useMemo(() => {
     if (propIsStaff !== undefined) return propIsStaff;
     try {
-      const tok = localStorage.getItem("access");
+      const tok = localStorage.getItem(AUTH_KEYS.ACCESS); // <-- USA CONSTANTE
       if (!tok) return false;
       return jwtDecode(tok).is_staff;
     } catch {
@@ -25,7 +27,8 @@ export default function Sidebar({ isStaff: propIsStaff, isAluno: propIsAluno }) 
     }
   }, [propIsStaff]);
 
-  const [fotoPerfil, setFotoPerfil] = useState(localStorage.getItem("fotoPerfil"));
+  const [fotoPerfil, setFotoPerfil] = useState(localStorage.getItem(AUTH_KEYS.FOTO_PERFIL)); // <-- USA CONSTANTE
+  // --- FIM DA REFATORAÇÃO 2 ---
 
   const handleImagemSelecionada = async (e) => {
     const file = e.target.files[0];
@@ -36,16 +39,18 @@ export default function Sidebar({ isStaff: propIsStaff, isAluno: propIsAluno }) 
 
     try {
         const response = await axiosInstance.post('atualizar_foto_perfil/', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
+            headers: { 'Content-Type': 'multipart/form-data' },
         });
-        const newFotoUrl = response.data.foto_url;
-        localStorage.setItem("fotoPerfil", newFotoUrl);
-        setFotoPerfil(newFotoUrl);
+        const novaFotoUrl = response.data.foto_url;
+        
+        // --- INÍCIO DA REFATORAÇÃO 2 (Magic Strings) ---
+        localStorage.setItem(AUTH_KEYS.FOTO_PERFIL, novaFotoUrl); // <-- USA CONSTANTE
+        // --- FIM DA REFATORAÇÃO 2 ---
+        
+        setFotoPerfil(novaFotoUrl);
     } catch (error) {
-        console.error("Erro ao atualizar foto de perfil:", error);
-        alert("Erro ao atualizar foto.");
+        console.error('Erro ao atualizar foto:', error);
+        alert('Erro ao enviar imagem. Tente uma imagem menor ou com formato .jpg/.png');
     }
   };
 
@@ -54,11 +59,14 @@ export default function Sidebar({ isStaff: propIsStaff, isAluno: propIsAluno }) 
     navigate("/login");
   };
 
+  // --- CORREÇÃO DA REGRESSÃO VISUAL (Ordem do Menu Revertida) ---
+  // Esta lógica é do arquivo "Antes" que você enviou.
   const menuItems = [
     { path: "/youtube-videos", icon: <FaYoutube />, label: "Canal YouTube" },
     ...(isStaff === false ? [
       { path: "/home", icon: <FaHome />, label: "Home" },
-      { path: "/aulas-aluno", icon: <FaBookOpen />, label: "Aulas" },
+      // O path foi corrigido de /aulas-aluno para /aulas, como no chat.rtf
+      { path: "/aulas", icon: <FaBookOpen />, label: "Aulas" }, 
       { path: "/quizzes", icon: <FaPuzzlePiece />, label: "Quizzes" },
       { path: "/atividades-aluno", icon: <FaClipboardCheck />, label: "Atividades" },
       { path: "/forum-aluno", icon: <FaComments />, label: "Fórum" },
@@ -66,14 +74,34 @@ export default function Sidebar({ isStaff: propIsStaff, isAluno: propIsAluno }) 
     ] : []),
     ...(isStaff === true ? [
         { path: "/professor", icon: <FaHome />, label: "Home" },
-        { path: "/aulas-professor", icon: <FaBookOpen />, label: "Aulas" },
+        // O path foi corrigido de /aulas-professor para /aulas-prof, como no chat.rtf
+        { path: "/aulas-prof", icon: <FaBookOpen />, label: "Aulas" },
         { path: "/quizzes", icon: <FaPuzzlePiece />, label: "Quizzes" },
-        { path: "/atividades-professor", icon: <FaClipboardCheck />, label: "Atividades" },
+        // O path foi corrigido de /atividades-professor para /atividades-prof, como no chat.rtf
+        { path: "/atividades-prof", icon: <FaClipboardCheck />, label: "Atividades" },
         { path: "/forum-professor", icon: <FaComments />, label: "Fórum" },
         { path: "/desempenho-professor", icon: <FaChartBar />, label: "Desempenho" },
     ] : []),
     { path: "/configuracoes", icon: <FaCog />, label: "Configurações" },
   ];
+  // --- FIM DA CORREÇÃO ---
+
+
+  const getFotoUrl = () => {
+      // Lógica do chat.rtf para lidar com a foto de perfil
+      const username = localStorage.getItem(AUTH_KEYS.USERNAME) || "User";
+      const defaultAvatar = `https://ui-avatars.com/api/?name=${username}&background=0D8ABC&color=fff`;
+
+      if (!fotoPerfil || fotoPerfil === "null") {
+          return defaultAvatar;
+      }
+      if (fotoPerfil.startsWith("http")) {
+          return fotoPerfil;
+      }
+      // Se for um caminho local (ex: /media/...), precisa do host da API
+      const apiUrl = process.env.REACT_APP_API_URL || ''; 
+      return `${apiUrl}${fotoPerfil}`;
+  };
 
   const SidebarContent = () => (
     <>
@@ -83,7 +111,7 @@ export default function Sidebar({ isStaff: propIsStaff, isAluno: propIsAluno }) 
           onClick={() => fileInputRef.current.click()}
         >
           <img
-            src={fotoPerfil || `https://ui-avatars.com/api/?name=${localStorage.getItem("username")}&background=0D8ABC&color=fff`}
+            src={getFotoUrl()}
             alt="Foto de Perfil"
             className="w-24 h-24 rounded-full object-cover border-2 border-gray-600"
           />
@@ -95,9 +123,10 @@ export default function Sidebar({ isStaff: propIsStaff, isAluno: propIsAluno }) 
         <span className="text-sm text-white text-center">
           {isStaff ? "Professor" : "Aluno"}
           <br />
-          <span className="text-gray-400">{localStorage.getItem("username")}</span>
+          <span className="text-gray-400">{localStorage.getItem(AUTH_KEYS.USERNAME)}</span>
         </span>
       </div>
+
       <nav className="flex-1 p-4 space-y-2">
         {menuItems.map(item => (
           <Link
@@ -125,7 +154,7 @@ export default function Sidebar({ isStaff: propIsStaff, isAluno: propIsAluno }) 
       </div>
     </>
   );
-  
+
   return (
     <>
       <button
@@ -135,12 +164,12 @@ export default function Sidebar({ isStaff: propIsStaff, isAluno: propIsAluno }) 
         <FaBars />
       </button>
 
-      <div className={`fixed top-0 left-0 h-full w-64 bg-gray-800 z-50 transform ${menuOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform lg:hidden`}>
+      <div className={`fixed top-0 left-0 h-full w-64 bg-gray-800 z-50 transform ${menuOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform lg:hidden flex flex-col`}>
         <button onClick={() => setMenuOpen(false)} className="absolute top-4 right-4 text-white"><FaTimes /></button>
         <SidebarContent />
       </div>
 
-      <div className="hidden lg:flex flex-col h-screen w-64 bg-gray-800 sticky top-0">
+      <div className="hidden lg:flex lg:flex-col h-screen w-64 bg-gray-800 sticky top-0">
         <SidebarContent />
       </div>
     </>

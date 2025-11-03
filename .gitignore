@@ -1,0 +1,15 @@
+# Python/Django
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Banco de dados local (se usar)
+db.sqlite3
+
+# Arquivos de ambiente
+.env
+
+# Ambientes virtuais
+venv/
+*.venv/

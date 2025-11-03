@@ -1,7 +1,6 @@
 # B-High Education - TP2: Manutenção Adaptativa
 
 Este repositório contém a entrega do **Trabalho Prático 2 (TP2)** da disciplina de **Manutenção e Integração de Software**, do curso de Engenharia de Software da Universidade Federal do Amazonas (UFAM).
-
 Docente: Prof. Dr. Andrey Rodrigues
 
 
@@ -9,7 +8,7 @@ O projeto consiste na aplicação de técnicas de **manutenção adaptativa** so
 
 ---
 
-## 🚀 Equipe de Desenvolvimento
+## 🚀 Equipa de Desenvolvimento
 
 * Bruna Miranda
 * Carlos Breno
@@ -22,11 +21,11 @@ O projeto consiste na aplicação de técnicas de **manutenção adaptativa** so
 ## 📂 Estrutura do Repositório
 
 O projeto está organizado na seguinte estrutura de pastas, conforme as diretrizes do trabalho:
--   `./src`: Contém o código-fonte completo da aplicação, dividido em:
+
+-   `./manutencao-adaptativa/`: Contém toda a documentação relacionada ao TP2, incluindo este README, o relatório final, o plano de estratégia e as evidências.
+-   `./src/`: Contém o código-fonte completo da aplicação, dividido em:
     -   `./src/backend/`: A API RESTful desenvolvida em Django.
     -   `./src/frontend/`: A aplicação cliente (Single Page Application) desenvolvida em React.
--   `./manutencao-adaptativa/`: Contém toda a documentação relacionada ao TP2, incluindo este README, o relatório final, o plano de estratégia e as evidências.
-
 
 ---
 
@@ -40,7 +39,7 @@ O projeto está organizado na seguinte estrutura de pastas, conforme as diretriz
 
 ## 📋 Resumo das Adaptações Realizadas
 
-Foram implementadas três principais manutenções adaptativas, baseadas na ata de reunião da equipe e nos requisitos do trabalho:
+Foram implementadas três principais manutenções adaptativas, baseadas na ata de reunião da equipa e nos requisitos do trabalho:
 
 1.  **Integração com API Externa (YouTube)**: Adicionada uma funcionalidade para buscar e exibir vídeos do YouTube, enriquecendo o conteúdo da plataforma.
 2.  **Conformidade com a LGPD (Consentimento)**: Implementado um mecanismo de consentimento explícito na página de registo, com checkboxes para Termos de Uso e Política de Privacidade.
@@ -103,6 +102,8 @@ Para executar a aplicação, é necessário iniciar o backend e o frontend em te
 ---
 
 ## 📄 Documentação do TP2
+
+Toda a documentação detalhada do trabalho, incluindo o relatório final, o plano de estratégia, o changelog e as evidências, pode ser encontrada na pasta `manutencao-adaptativa`.
 
 -   **[RELATORIO.md](./RELATORIO.md)**: Síntese completa de todas as adaptações realizadas.
 -   **[plano-estrategia.md](./plano-estrategia.md)**: Descrição da estratégia adotada para cada tarefa.
