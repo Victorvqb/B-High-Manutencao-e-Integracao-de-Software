@@ -2,7 +2,8 @@
 
 Este documento detalha a arquitetura de backend do sistema B-High Education, conforme representado no diagrama de classe. O diagrama foi gerado para refletir a estrutura final do sistema após a aplicação das refatorações do TP3.
 
-![Diagrama de Classe Completo](./diagrama-de-classe-completo.png](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/855665e4ea395b5c92cbe3c938c161a1bbb3ef56/Refatoracao/1-Diagramas/Diagra-de-Classe-backend-B-High%20Education.jpg)
+![Diagrama de Classe Completo](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/855665e4ea395b5c92cbe3c938c161a1bbb3ef56/Refatoracao/1-Diagramas/Diagra-de-Classe-backend-B-High%20Education.jpg)
+
 
 
 ---
