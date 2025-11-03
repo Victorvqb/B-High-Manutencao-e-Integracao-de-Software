@@ -41,19 +41,20 @@
 
 ### Evidências
 
-![Código duplicado em admin.py ANTES](./1-Refatoracao-Design-Code-Smells/Antes/antes_admin.png)
+![Código duplicado em admin.py ANTES](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/raw/00d98b73b6ac03b2e9990fc003a073b36f563022/Refatoracao/5-Evidencias/1-Refatoracao-Design-Code-Smells/Antes/admin.py-antes-code-smells.png)
 _Figura 1: "Antes" - Lógica de criação de usuário duplicada diretamente no `admin.py`._
 
-![Código duplicado em signals.py ANTES](./1-Refatoracao-Design-Code-Smells/Antes/antes_signals.png)
+
+![Código duplicado em signals.py ANTES](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/00d98b73b6ac03b2e9990fc003a073b36f563022/Refatoracao/5-Evidencias/1-Refatoracao-Design-Code-Smells/Antes/signals.py-antes-code-smaells.png)
 _Figura 2: "Antes" - A mesma lógica duplicada no `signals.py`._
 
-![Código duplicado em views.py ANTES](./1-Refatoracao-Design-Code-Smells/Antes/antes_views.png)
+![Código duplicado em views.py ANTES](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/00d98b73b6ac03b2e9990fc003a073b36f563022/Refatoracao/5-Evidencias/1-Refatoracao-Design-Code-Smells/Antes/views.py-antes-code-smaells.png)
 _Figura 3: "Antes" - A terceira duplicata, no `views.py`, completando o code smell._
 
-![A nova Fachada em services.py DEPOIS](./1-Refatoracao-Design-Code-Smells/Depois/depois_services_facade.png)
+![A nova Fachada em services.py DEPOIS](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/00d98b73b6ac03b2e9990fc003a073b36f563022/Refatoracao/5-Evidencias/1-Refatoracao-Design-Code-Smells/Depois/servives.py-1-depois-code-smells.png)
 _Figura 4: "Depois" - A nova classe `ProfessorApprovalService` centraliza toda a lógica._
 
-![Chamada à Fachada em admin.py DEPOIS](./1-Refatoracao-Design-Code-Smells/Depois/depois_admin_chamada.png)
+![Chamada à Fachada em admin.py DEPOIS](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/00d98b73b6ac03b2e9990fc003a073b36f563022/Refatoracao/5-Evidencias/1-Refatoracao-Design-Code-Smells/Depois/admin.py-depois-code-smells.png)
 _Figura 5: "Depois" - O `admin.py` (assim como `signals.py` e `views.py`) agora delega a responsabilidade para a fachada._
 
 ---
@@ -73,10 +74,10 @@ _Figura 5: "Depois" - O `admin.py` (assim como `signals.py` e `views.py`) agora 
 
 ### Evidências
 
-![views.py ANTES da extração do método](./2-Refatoracao-Codigo-Extract-Method/Antes/antes_views_post.png)
+![views.py ANTES da extração do método](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/00d98b73b6ac03b2e9990fc003a073b36f563022/Refatoracao/5-Evidencias/2-Refatoracao-Codigo-Extract-Method/Antes/views.py-antes-extract-method.png)
 _Figura 6: "Antes" - O método `post` continha o loop de cálculo de `acertos` (Linhas 181-188 no original)._
 
-![views.py DEPOIS da extração do método](./2-Refatoracao-Codigo-Extract-Method/Depois/depois_views_post.png)
+![views.py DEPOIS da extração do método](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/00d98b73b6ac03b2e9990fc003a073b36f563022/Refatoracao/5-Evidencias/2-Refatoracao-Codigo-Extract-Method/Depois/views.py-depois-extract-method.png)
 _Figura 7: "Depois" - O método `post` foi simplificado e o novo método `_calculate_score` foi criado._
 
 ---
@@ -96,13 +97,13 @@ _Figura 7: "Depois" - O método `post` foi simplificado e o novo método `_calcu
 
 ### Evidências
 
-![Login.jsx ANTES das constantes](./3-Refatoracao-Codigo-Replace-Magic-String/Antes/antes_login.png)
+![Login.jsx ANTES das constantes](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/00d98b73b6ac03b2e9990fc003a073b36f563022/Refatoracao/5-Evidencias/3-Refatoracao-Codigo-Replace-Magic-String/Antes/Login.jsx-antes-replace-magic-string.png)
 _Figura 8: "Antes" - Uso de strings literais `"access"`, `"refresh"`, etc., no `Login.jsx`._
 
-![O novo arquivo constants.js DEPOIS](./3-Refatoracao-Codigo-Replace-Magic-String/Depois/depois_constants.png)
+![O novo arquivo constants.js DEPOIS](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/00d98b73b6ac03b2e9990fc003a073b36f563022/Refatoracao/5-Evidencias/3-Refatoracao-Codigo-Replace-Magic-String/Depois/Login.jsx-depois-replace-magic-string.png)
 _Figura 9: "Depois" - O novo arquivo `constants.js` centraliza todas as chaves._
 
-![Login.jsx DEPOIS das constantes](./3-Refatoracao-Codigo-Replace-Magic-String/Depois/depois_login.png)
+![Login.jsx DEPOIS das constantes](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/00d98b73b6ac03b2e9990fc003a073b36f563022/Refatoracao/5-Evidencias/3-Refatoracao-Codigo-Replace-Magic-String/Depois/constants.js-depois-replace-magic-string.png)
 _Figura 10: "Depois" - O `Login.jsx` agora usa as constantes importadas, tornando o código robusto._
 
 ---
@@ -122,13 +123,13 @@ _Figura 10: "Depois" - O `Login.jsx` agora usa as constantes importadas, tornand
 
 ### Evidências
 
-![urls.py ANTES da remoção](./4-Refatoracao-Codigo-Remove-Dead-Code/Antes/antes_urls.png)
+![urls.py ANTES da remoção](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/00d98b73b6ac03b2e9990fc003a073b36f563022/Refatoracao/5-Evidencias/4-Refatoracao-Codigo-Remove-Dead-Code/Antes/urls.py-antes-remove-dead-code.png)
 _Figura 11: "Antes" - O `urls.py` principal importando a `EnviarAtividadeView` (Linha 6), causando um `ImportError`._
 
-![views.py ANTES da remoção](./4-Refatoracao-Codigo-Remove-Dead-Code/Antes/antes_views_dead_class.png)
+![views.py ANTES da remoção](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/00d98b73b6ac03b2e9990fc003a073b36f563022/Refatoracao/5-Evidencias/4-Refatoracao-Codigo-Remove-Dead-Code/Antes/views.py-antes-remove-dead-code.png)
 _Figura 12: "Antes" - A classe `EnviarAtividadeView` que era código morto no `views.py`._
 
-![urls.py DEPOIS da remoção](./4-Refatoracao-Codigo-Remove-Dead-Code/Depois/depois_urls.png)
+![urls.py DEPOIS da remoção](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/00d98b73b6ac03b2e9990fc003a073b36f563022/Refatoracao/5-Evidencias/4-Refatoracao-Codigo-Remove-Dead-Code/Depois/urls.py-depois-remove-dead-code.png)
 _Figura 13: "Depois" - A importação foi removida, corrigindo o `ImportError`._
 
 ---
@@ -147,10 +148,10 @@ _Figura 13: "Depois" - A importação foi removida, corrigindo o `ImportError`._
 
 ### Evidências
 
-![views.py ANTES das constantes](./5-Refatoracao-Codigo-Introduce-constant/Antes/antes_views_youtube.png)
+![views.py ANTES das constantes](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/00d98b73b6ac03b2e9990fc003a073b36f563022/Refatoracao/5-Evidencias/5-Refatoracao-Codigo-Introduce-constant/Antes/views-antes-introduce-constant.png)
 _Figura 14: "Antes" - Strings mágicas "hardcoded" dentro do método `get`._
 
-![views.py DEPOIS das constantes](./5-Refatoracao-Codigo-Introduce-constant/Depois/depois_views_youtube.png)
+![views.py DEPOIS das constantes](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/00d98b73b6ac03b2e9990fc003a073b36f563022/Refatoracao/5-Evidencias/5-Refatoracao-Codigo-Introduce-constant/Depois/views-depois-introduce-constant.png)
 _Figura 15: "Depois" - Constantes definidas no topo do arquivo e usadas no método `get`._
 
 ---
