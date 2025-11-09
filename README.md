@@ -20,20 +20,38 @@ Docente: Prof. Dr. Andrey Rodrigues
 
 ## 📂 Estrutura do Repositório
 
-O projeto está organizado em pastas, uma para cada trabalho prático entregue ao longo da disciplina.
+O projeto está organizado em pastas, uma para cada trabalho prático ou atividade entregue ao longo da disciplina.
 
-* **`/Manutencao_Corretiva/`**: Contém toda a documentação específica do **Trabalho Prático 1 (TP1)**, incluindo relatórios e evidências.
-* **`/manutencao-adaptativa/`**: Contém toda a documentação específica do **Trabalho Prático 2 (TP2)**, incluindo relatórios e evidências.
+* [cite_start]**`/Manutencao_Corretiva/`**: Contém toda a documentação específica do **Trabalho Prático 1 (TP1)** [cite: 10][cite_start], focado na identificação e correção de bugs[cite: 12].
+* [cite_start]**`/manutencao-adaptativa/`**: Contém toda a documentação específica do **Trabalho Prático 2 (TP2)** [cite: 127][cite_start], focado em adaptar o software a mudanças de ambiente ou requisitos[cite: 134].
+* **`/Refatoracao/`**: Contém o trabalho prático focado em Refatoração de código, visando melhorar a qualidade interna do software.
+* **`/Documentacao_do_Sistema/`**: Centraliza a documentação técnica e funcional do sistema, servindo como base para as atividades de manutenção.
 
 ---
 
 ## 📖 Trabalhos Práticos
 
+### TP1 - Manutenção Corretiva
+
+[cite_start]Este trabalho consistiu em aplicar conceitos de manutenção corretiva no sistema[cite: 12]. [cite_start]O processo incluiu a identificação e classificação de bugs [cite: 21, 22][cite_start], registro detalhado em *bug reports* [cite: 36][cite_start], rastreamento via Issues do GitHub [cite: 45][cite_start], e a correção efetiva dos problemas seguindo boas práticas de versionamento (branches [cite: 57][cite_start], commits semânticos [cite: 70] [cite_start]e Pull Requests [cite: 81]).
+
+* **Documentação Detalhada**: Para uma visão completa da análise, relatórios de bugs e evidências de correção, acesse a pasta **[./Manutencao_Corretiva/](./Manutencao_Corretiva)**.
+
 ### TP2 - Manutenção Adaptativa
 
-Este trabalho consistiu em aplicar conceitos de manutenção adaptativa sobre uma aplicação web existente (um Ambiente Virtual de Aprendizagem).
+[cite_start]Este trabalho consistiu em aplicar conceitos de manutenção adaptativa sobre uma aplicação web existente (um Ambiente Virtual de Aprendizagem)[cite: 134]. [cite_start]O objetivo foi responder a mudanças de ambiente, como atualização de dependências [cite: 138][cite_start], novas regulamentações (ex: LGPD) [cite: 142, 145] [cite_start]e migração de APIs externas[cite: 153].
 
-* **Código-Fonte**: O código modificado para este trabalho pode ser encontrado na pasta, podendo ser alterado frente a outras manuntenções `./src/`.
-* **Documentação Detalhada**: Para uma visão completa do que foi feito, incluindo o plano de estratégia, relatório final e evidências, aceda à pasta **[./manutencao-adaptativa/](./Manutencao-Adaptativa)**.
+* **Código-Fonte**: O código modificado para este trabalho pode ser encontrado na pasta `./src/`.
+* **Documentação Detalhada**: Para uma visão completa do que foi feito, incluindo o plano de estratégia, relatório final e evidências, aceda à pasta **[./manutencao-adaptativa/](./manutencao-adaptativa)**.
 
-*(Esta secção pode ser expandida no futuro para incluir links e descrições de outros trabalhos)*
+### (TPX) - Refatoração de Código
+
+Esta atividade foi focada na aplicação de técnicas de refatoração de software. O objetivo principal foi melhorar a estrutura interna e a qualidade do código-fonte do sistema, sem alterar seu comportamento externo, facilitando futuras manutenções e evoluções.
+
+* **Documentação Detalhada**: Para conferir as técnicas aplicadas e as melhorias implementadas, acesse a pasta **[./Refatoracao/](./Refatoracao)**.
+
+### (TPX) - Documentação do Sistema
+
+Esta seção reúne a documentação técnica e funcional essencial do sistema. Ela serve como um guia centralizado para desenvolvedores e partes interessadas, detalhando a arquitetura, funcionalidades e guias de uso, sendo um pilar fundamental para todas as atividades de manutenção.
+
+* **Documentação Detalhada**: Para consultar a documentação completa, acesse a pasta **[./Documentacao_do_Sistema/](./Documentacao_do_Sistema)**.
