@@ -44,7 +44,7 @@ Este trabalho consistiu em aplicar conceitos de manutenção adaptativa sobre um
 * **Código-Fonte**: O código modificado para este trabalho pode ser encontrado na pasta `./src/`.
 * **Documentação Detalhada**: Para uma visão completa do que foi feito, incluindo o plano de estratégia, relatório final e evidências, aceda à pasta **[./manutencao-adaptativa/](./manutencao-adaptativa)**.
 
-### (TP3) - Refatoração de Código
+### TP3 - Refatoração de Código
 
 Esta atividade foi focada na aplicação de técnicas de refatoração de software. O objetivo principal foi melhorar a estrutura interna e a qualidade do código-fonte do sistema, sem alterar seu comportamento externo, facilitando futuras manutenções e evoluções.
 
