@@ -44,13 +44,13 @@ Este trabalho consistiu em aplicar conceitos de manutenção adaptativa sobre um
 * **Código-Fonte**: O código modificado para este trabalho pode ser encontrado na pasta `./src/`.
 * **Documentação Detalhada**: Para uma visão completa do que foi feito, incluindo o plano de estratégia, relatório final e evidências, aceda à pasta **[./manutencao-adaptativa/](./manutencao-adaptativa)**.
 
-### (TPX) - Refatoração de Código
+### (TP3) - Refatoração de Código
 
 Esta atividade foi focada na aplicação de técnicas de refatoração de software. O objetivo principal foi melhorar a estrutura interna e a qualidade do código-fonte do sistema, sem alterar seu comportamento externo, facilitando futuras manutenções e evoluções.
 
 * **Documentação Detalhada**: Para conferir as técnicas aplicadas e as melhorias implementadas, acesse a pasta **[./Refatoracao/](./Refatoracao)**.
 
-### (TPX) - Documentação do Sistema
+### Documentação do Sistema
 
 Esta seção reúne a documentação técnica e funcional essencial do sistema. Ela serve como um guia centralizado para desenvolvedores e partes interessadas, detalhando a arquitetura, funcionalidades e guias de uso, sendo um pilar fundamental para todas as assessividades de manutenção.
 
