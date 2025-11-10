@@ -168,7 +168,6 @@ class RespostaForumSerializer(serializers.ModelSerializer):
         return obj.likes.count()
 
     def get_usuario_curtiu(self, obj):
-        # Tenta pegar o usuário do contexto da requisição
         request = self.context.get('request')
         if not request or not request.user.is_authenticated:
             return False
@@ -180,7 +179,7 @@ class RespostaForumSerializer(serializers.ModelSerializer):
 class ComentarioForumSerializer(serializers.ModelSerializer):
     autor_nome = serializers.CharField(source="autor.username", read_only=True)
     autor_username = serializers.CharField(source="autor.username", read_only=True)
-    respostas = RespostaForumSerializer(many=True, read_only=True)
+    respostas = RespostaForumSerializer(many=True, read_only=True, context={'request': serializers.SerializerMethodField()})
     # Novos campos para likes
     likes_count = serializers.SerializerMethodField()
     usuario_curtiu = serializers.SerializerMethodField()
@@ -193,11 +192,16 @@ class ComentarioForumSerializer(serializers.ModelSerializer):
         return obj.likes.count()
 
     def get_usuario_curtiu(self, obj):
-        # Tenta pegar o usuário do contexto da requisição
         request = self.context.get('request')
         if not request or not request.user.is_authenticated:
             return False
         return obj.likes.filter(id=request.user.id).exists()
+        
+    # Garante que o 'request' seja passado para o serializer aninhado de Respostas
+    def get_fields(self):
+        fields = super().get_fields()
+        fields['respostas'] = RespostaForumSerializer(many=True, read_only=True, context=self.context)
+        return fields
 # ^^^^^^ FIM DA MUDANÇA ^^^^^^
 
 # ─── Desempenho ───────────────────────────

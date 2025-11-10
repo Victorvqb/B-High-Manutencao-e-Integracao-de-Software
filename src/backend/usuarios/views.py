@@ -7,11 +7,7 @@ from django.db.models import Exists, OuterRef, Q
 from rest_framework.parsers import MultiPartParser
 from googleapiclient.discovery import build
 from django.core.cache import cache
-from rest_framework.views import APIView
 from django.utils import timezone
-from rest_framework.response import Response
-from django.db.models import Exists, OuterRef, Q
-from rest_framework.parsers import MultiPartParser
 from rest_framework import serializers
 from .models import Quiz
 from rest_framework import status
@@ -189,7 +185,7 @@ class QuizDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 class RespostaQuizView(ListAPIView):
     serializer_class = RespostaQuizSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     def get_queryset(self):
         return RespostaQuiz.objects.filter(aluno=self.request.user)
 
