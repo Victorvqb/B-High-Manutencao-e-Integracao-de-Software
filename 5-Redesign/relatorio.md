@@ -153,7 +153,7 @@ Foi adotado um fluxo de trabalho baseado em Git Flow simplificado:
 ### Evidência
 
 Histórico de Commits e Branches
-![Histórico Git]([COLE_O_LINK_DO_PRINT_AQUI?raw=true](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/e520daa9462f4305bf20d7d2ae8ae08137e9a230/5-Redesign/6-versionamento/Branchs.png))
+![Histórico Git](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/e520daa9462f4305bf20d7d2ae8ae08137e9a230/5-Redesign/6-versionamento/Branchs.png)
 
 ---
 
