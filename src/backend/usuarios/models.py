@@ -171,7 +171,6 @@ class ComentarioForum(models.Model):
     def __str__(self):
         return f"{self.autor.username}: {self.texto[:30]}"
 
-    # VVVVVV PROPRIEDADES ADICIONADAS (para o frontend) VVVVVV
     @property
     def autor_nome(self):
         return self.autor.first_name or self.autor.username
@@ -179,7 +178,6 @@ class ComentarioForum(models.Model):
     @property
     def autor_username(self):
         return self.autor.username
-    # ^^^^^^ FIM DAS PROPRIEDADES ^^^^^^
 
 
 class RespostaForum(models.Model):
@@ -194,11 +192,9 @@ class RespostaForum(models.Model):
     def __str__(self):
         return f"{self.autor.username} respondeu: {self.texto[:30]}"
 
-    # VVVVVV PROPRIEDADE ADICIONADA (para o frontend) VVVVVV
     @property
     def autor_nome(self):
         return self.autor.first_name or self.autor.username
-    # ^^^^^^ FIM DA PROPRIEDADE ^^^^^^
 
 
 # ─── Desempenho ────────────────────────────────────────────────

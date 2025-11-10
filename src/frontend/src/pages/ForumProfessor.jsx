@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../utils/axiosInstance";
-// VVVVVV ÍCONES PARA O REDESIGN ADICIONADOS VVVVVV
-import { FaEdit, FaTrash, FaReply } from "react-icons/fa"; 
+import { FaEdit, FaTrash, FaReply, FaHeart } from "react-icons/fa"; // Ícone de Coração
 
 export default function ForumProfessor() {
   const [comentarios, setComentarios] = useState([]);
@@ -71,8 +70,7 @@ export default function ForumProfessor() {
     if (!texto.trim()) return;
     try {
         if (isResposta) {
-            // Lógica para editar resposta (precisaria de um endpoint específico)
-            // await axiosInstance.put(`forum/respostas/${id}/`, { texto });
+            // await axiosInstance.put(`forum/respostas/${id}/`, { texto }); // Endpoint hipotético
         } else {
             await axiosInstance.put(`forum/${id}/`, { texto });
         }
@@ -86,11 +84,9 @@ export default function ForumProfessor() {
   const apagar = async (id, isResposta = false) => {
     const confirmDelete = window.confirm("Tem a certeza que quer apagar?");
     if (!confirmDelete) return;
-
     try {
         if (isResposta) {
-            // Lógica para apagar resposta (precisaria de um endpoint específico)
-            // await axiosInstance.delete(`forum/respostas/${id}/`);
+            // await axiosInstance.delete(`forum/respostas/${id}/`); // Endpoint hipotético
         } else {
             await axiosInstance.delete(`forum/${id}/`);
         }
@@ -99,6 +95,50 @@ export default function ForumProfessor() {
         console.error("Erro ao apagar:", err);
     }
   };
+
+  // VVVVVV NOVA FUNÇÃO DE LIKE (ETAPA 2) VVVVVV
+  const handleLike = async (id, isResposta = false) => {
+    const url = isResposta
+      ? `forum/resposta/${id}/like/`
+      : `forum/comentario/${id}/like/`;
+    
+    try {
+      const { data } = await axiosInstance.post(url);
+
+      // Atualiza o estado local (UI Otimista)
+      setComentarios(prevComentarios => {
+        return prevComentarios.map(com => {
+          if (!isResposta && com.id === id) {
+            return {
+              ...com,
+              likes_count: data.total_likes,
+              usuario_curtiu: data.curtido,
+            };
+          }
+          if (isResposta) {
+            return {
+              ...com,
+              respostas: com.respostas.map(res => {
+                if (res.id === id) {
+                  return {
+                    ...res,
+                    likes_count: data.total_likes,
+                    usuario_curtiu: data.curtido,
+                  };
+                }
+                return res;
+              })
+            };
+          }
+          return com;
+        });
+      });
+
+    } catch (err) {
+      console.error("Erro ao curtir:", err);
+    }
+  };
+  // ^^^^^^ FIM DA FUNÇÃO ^^^^^^
 
   return (
     <main className="flex-1 p-6">
@@ -120,8 +160,16 @@ export default function ForumProfessor() {
                 <div key={comentario.id} className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
                     <p className="text-gray-900 dark:text-white"><strong>{comentario.autor_nome}:</strong> {comentario.texto}</p>
                     
-                    {/* VVVVVV CÓDIGO DE REDESIGN (ETAPA 1) CORRIGIDO VVVVVV */}
-                    <div className="flex gap-2 text-xs mt-2">
+                    <div className="flex gap-3 text-xs mt-2 items-center">
+                        {/* VVVVVV BOTÃO DE LIKE ADICIONADO VVVVVV */}
+                        <button 
+                            onClick={() => handleLike(comentario.id, false)}
+                            className={`flex items-center gap-1 ${comentario.usuario_curtiu ? 'text-red-500' : 'text-gray-500 dark:text-gray-400 hover:text-red-500'} transition-colors`}
+                        >
+                            <FaHeart /> {comentario.likes_count || 0}
+                        </button>
+                        {/* ^^^^^^ FIM DO BOTÃO ^^^^^^ */}
+
                         <button 
                             onClick={() => setRespostaAtiva(respostaAtiva === comentario.id ? null : comentario.id)}
                             className="flex items-center gap-1 bg-blue-500 hover:bg-blue-400 text-white px-3 py-1 rounded text-xs transition-colors"
@@ -146,13 +194,22 @@ export default function ForumProfessor() {
                             </>
                         )}
                     </div>
-                    {/* ^^^^^^ FIM DA CORREÇÃO ^^^^^^ */}
                     
                     {/* Respostas */}
-                    <div className="ml-6 mt-2 space-y-2 border-l-2 pl-4 dark:border-gray-700">
+                    <div className="ml-6 mt-3 space-y-3 border-l-2 pl-4 dark:border-gray-700">
                         {comentario.respostas.map(resposta => (
                             <div key={resposta.id}>
                                 <p className="text-gray-800 dark:text-gray-200"><strong>{resposta.autor_nome}:</strong> {resposta.texto}</p>
+                                {/* VVVVVV LIKES NAS RESPOSTAS VVVVVV */}
+                                <div className="flex gap-3 text-xs mt-1 items-center">
+                                    <button 
+                                        onClick={() => handleLike(resposta.id, true)}
+                                        className={`flex items-center gap-1 ${resposta.usuario_curtiu ? 'text-red-500' : 'text-gray-500 dark:text-gray-400 hover:text-red-500'} transition-colors`}
+                                    >
+                                        <FaHeart /> {resposta.likes_count || 0}
+                                    </button>
+                                </div>
+                                {/* ^^^^^^ FIM DOS LIKES ^^^^^^ */}
                             </div>
                         ))}
                     </div>

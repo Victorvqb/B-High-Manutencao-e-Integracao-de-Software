@@ -16,7 +16,7 @@ from rest_framework import serializers
 from .models import Quiz
 from rest_framework import status
 from .serializers import QuizSerializer
-from django.shortcuts import get_object_or_404 # <-- GARANTINDO QUE ESTÁ IMPORTADO
+from django.shortcuts import get_object_or_404
 from rest_framework import status, viewsets, generics, permissions
 from .serializers import AulaSerializer, EntregaSerializer
 from .models import Usuario, Entrega, Aula
@@ -49,6 +49,7 @@ from .serializers import (
     CustomTokenObtainPairSerializer,
     AtividadeSerializer,
     ComentarioForumSerializer,
+    RespostaForumSerializer, # <--- ADICIONADO PARA CLAREZA
     DesempenhoSerializer,
     SolicitacaoProfessorSerializer,
     YouTubeVideoSerializer,
@@ -188,7 +189,7 @@ class QuizDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 class RespostaQuizView(ListAPIView):
     serializer_class = RespostaQuizSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     def get_queryset(self):
         return RespostaQuiz.objects.filter(aluno=self.request.user)
 
@@ -328,18 +329,13 @@ class AtividadeDetailView(RetrieveUpdateDestroyAPIView):
 #  Fórum 
 class ForumAPIView(APIView):
     permission_classes = [IsAuthenticated]
-
+    
     # VVVVVV MUDANÇA (ETAPA 2): Passando contexto para o Serializer VVVVVV
     def get_serializer_context(self):
-        """
-        Garante que o serializer tenha acesso ao 'request' para
-        verificar se o usuário curtiu o post.
-        """
         return {'request': self.request}
 
     def get(self, request):
         comentarios = ComentarioForum.objects.all().order_by("-id")
-        # Passa o contexto para o serializer
         serializer = ComentarioForumSerializer(comentarios, many=True, context=self.get_serializer_context())
         return Response(serializer.data)
     # ^^^^^^ FIM DA MUDANÇA ^^^^^^
@@ -348,18 +344,16 @@ class ForumAPIView(APIView):
         comentario = ComentarioForum.objects.create(
             autor=request.user, texto=request.data.get("texto")
         )
-        # Passa o contexto para o serializer
-        serializer = ComentarioForumSerializer(comentario, context=self.get_serializer_context())
+        serializer = ComentarioForumSerializer(comentario, context=self.get_serializer_context()) # Passa o contexto
         return Response(serializer.data, status=status.HTTP_201_CREATED) # Retorna o obj criado
 
     def put(self, request, pk):
         comentario = get_object_or_404(ComentarioForum, pk=pk, autor=request.user)
         comentario.texto = request.data.get("texto", comentario.texto)
         comentario.save()
-        # Passa o contexto para o serializer
-        serializer = ComentarioForumSerializer(comentario, context=self.get_serializer_context())
+        serializer = ComentarioForumSerializer(comentario, context=self.get_serializer_context()) # Passa o contexto
         return Response(serializer.data)
-
+        
     def delete(self, request, pk):
         comentario = get_object_or_404(ComentarioForum, pk=pk, autor=request.user)
         comentario.delete()
@@ -367,7 +361,7 @@ class ForumAPIView(APIView):
 
 class ResponderComentarioAPIView(APIView):
     permission_classes = [IsAuthenticated]
-    
+
     # VVVVVV MUDANÇA (ETAPA 2): Passando contexto para o Serializer VVVVVV
     def get_serializer_context(self):
         return {'request': self.request}
@@ -380,8 +374,7 @@ class ResponderComentarioAPIView(APIView):
         resposta = RespostaForum.objects.create(
             comentario=comentario, autor=request.user, texto=request.data.get("texto")
         )
-        # Passa o contexto para o serializer
-        serializer = RespostaForumSerializer(resposta, context=self.get_serializer_context())
+        serializer = RespostaForumSerializer(resposta, context=self.get_serializer_context()) # Passa o contexto
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 #  Desempenho 
@@ -515,7 +508,7 @@ class DeleteUserAccountView(APIView):
         )
 
 
-# VVVVVV NOVAS VIEWS ADICIONADAS (ETAPA 2) VVVVVV
+# VVVVVV NOVAS VIEWS ADICIONADAS (ETAPA 2 - LIKES) VVVVVV
 
 class ToggleLikeComentarioView(APIView):
     """
@@ -528,11 +521,9 @@ class ToggleLikeComentarioView(APIView):
         user = request.user
         
         if user in comentario.likes.all():
-            # Usuário já curtiu, então vamos descurtir
             comentario.likes.remove(user)
             curtido = False
         else:
-            # Usuário ainda não curtiu, então vamos curtir
             comentario.likes.add(user)
             curtido = True
             
@@ -549,11 +540,9 @@ class ToggleLikeRespostaView(APIView):
         user = request.user
         
         if user in resposta.likes.all():
-            # Usuário já curtiu, então vamos descurtir
             resposta.likes.remove(user)
             curtido = False
         else:
-            # Usuário ainda não curtiu, então vamos curtir
             resposta.likes.add(user)
             curtido = True
             
