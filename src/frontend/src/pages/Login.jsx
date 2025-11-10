@@ -9,18 +9,16 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [souAdmin, setSouAdmin] = useState(false);
   const [erroLogin, setErroLogin] = useState("");
-  const [isLoading, setIsLoading] = useState(false); // <-- ESTADO DE LOADING
+  const [isLoading, setIsLoading] = useState(false); 
   const navigate = useNavigate();
 
   const handleLogin = async () => {
     setErroLogin("");
-
     if (!username || !password) {
       setErroLogin("Por favor, preencha todos os campos.");
       return;
     }
-
-    setIsLoading(true); // <-- ATIVA LOADING
+    setIsLoading(true); 
 
     try {
       const response = await axios.post("token/", {
@@ -42,7 +40,6 @@ export default function Login() {
       localStorage.setItem(AUTH_KEYS.IS_SUPERUSER, JSON.stringify(isSuperuser));
       localStorage.removeItem(AUTH_KEYS.FOTO_PERFIL);
 
-      // --- CORREÇÃO: USAR NAVIGATE EM VEZ DE window.location ---
       if (souAdmin) {
         if (isSuperuser && userFromBackend === "admin") {
           navigate("/admin-dashboard");
@@ -58,16 +55,18 @@ export default function Login() {
     } catch (err) {
       setErroLogin("Usuário ou senha inválidos.");
     } finally {
-      setIsLoading(false); // <-- DESATIVA LOADING
+      setIsLoading(false); 
     }
   };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-gray-900">
       <div className="w-full max-w-md rounded-lg bg-white dark:bg-gray-800 p-6 shadow-md">
+        
         <h1 className="mb-6 text-center text-3xl font-bold text-green-600 dark:text-green-400">
           B-High Education
         </h1>
+
         {erroLogin && (
           <div className="mb-4 rounded-md bg-red-100 p-3 text-center text-sm text-red-700 dark:bg-red-900 dark:text-red-200">
             {erroLogin}
@@ -78,6 +77,7 @@ export default function Login() {
           placeholder="Usuário"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
+          aria-label="Usuário" 
         />
         <input
           className="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-black dark:text-white rounded-md px-3 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -85,10 +85,11 @@ export default function Login() {
           placeholder="Senha"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          aria-label="Senha" 
         />
 
         <p
-          className="text-sm text-blue-600 hover:underline text-center cursor-pointer mb-4"
+          className="text-sm text-blue-600 dark:text-blue-400 hover:underline text-center cursor-pointer mb-4"
           onClick={() => navigate("/recuperar-senha")}
         >
           Esqueceu sua senha?
@@ -104,22 +105,22 @@ export default function Login() {
           Sou administrador
         </label>
 
+        {/* VVVVVV CORREÇÃO DE CONTRASTE DO BOTÃO AQUI VVVVVV */}
         <button
           onClick={handleLogin}
-          disabled={isLoading} // <-- DESABILITA BOTÃO ENQUANTO CARREGA
-          className="w-full bg-green-600 hover:bg-green-500 text-white py-2 rounded-md mb-3 disabled:bg-gray-400"
+          disabled={isLoading} 
+          className="w-full bg-green-700 hover:bg-green-600 text-white py-2 rounded-md mb-3 disabled:bg-gray-400"
         >
-          {isLoading ? "Entrando..." : "Entrar"} {/* <-- MUDA TEXTO */}
+          {isLoading ? "Entrando..." : "Entrar"} 
         </button>
+        {/* ^^^^^^ FIM DA CORREÇÃO ^^^^^^ */}
         
-        {/* VVVVVV BOTÃO DE CADASTRO MODIFICADO AQUI VVVVVV */}
         <button
           onClick={() => navigate("/cadastro")}
           className="w-full text-center text-green-600 dark:text-green-400 hover:underline py-2 rounded-md"
         >
           Cadastrar-se
         </button>
-        {/* ^^^^^^ FIM DA MODIFICAÇÃO ^^^^^^ */}
       </div>
     </div>
   );
