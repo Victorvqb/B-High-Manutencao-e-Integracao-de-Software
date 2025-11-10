@@ -34,6 +34,7 @@ Com base na avaliação, foram implementadas 4 correções de redesign, com o ob
 
 **Evidências (Antes e Depois):**
 
+Antes (FórumProfessor.jsx) 
 ![Antes (FórumProfessor.jsx)](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/94ceef8bc2e28a84485b94e3f0af00c5e0876240/5-Redesign/5-evidencias-antes/forum-turma-adm.png)
 Depois (FórumProfessor.jsx) 
 ![Depois (FórumProfessor.jsx)](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/1203c09646d6888f94ad5e1ac24a7252e0dded6c/5-Redesign/1-%20botao-editar-excluir/Botao-Depois.png)
@@ -48,9 +49,10 @@ Depois (FórumProfessor.jsx)
 
 **Evidências (Antes e Depois):**
 
-| Antes (AdminDashboard.jsx) | Depois (AdminDashboard.jsx) |
-| :---: | :---: |
-| [INSERIR PRINT `image_ee1387.png`] | [INSERIR PRINT DA TELA DO ADMIN "DEPOIS"] |
+Antes (AdminDashboard.jsx)
+![Antes (AdminDashboard.jsx)](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/1af01ceb9a69de97b903e95aff4cb7a28abb4ca1/5-Redesign/2%20-abas-adicionais/adm-dash-antes.png)
+Depois (AdminDashboard.jsx)
+![Depois (AdminDashboard.jsx)](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/1af01ceb9a69de97b903e95aff4cb7a28abb4ca1/5-Redesign/2%20-abas-adicionais/adm-dash-depois.png)
 
 ---
 
@@ -61,9 +63,12 @@ Depois (FórumProfessor.jsx)
 
 **Evidências (Antes e Depois):**
 
-| Antes (Professor.jsx) | Depois (Professor.jsx) |
-| :---: | :---: |
-| [INSERIR PRINT `image_ee1438.png`] | [INSERIR PRINT `image_0771c9.png`] |
+Antes (Professor.jsx)
+![Antes (Professor.jsx))](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/1af01ceb9a69de97b903e95aff4cb7a28abb4ca1/5-Redesign/3-tela-sem-status/minhas-aulas-adm.png)
+Depois 1 (AdminDashboard.jsx)
+![Depois (AdminDashboard.jsx)](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/1af01ceb9a69de97b903e95aff4cb7a28abb4ca1/5-Redesign/3-tela-sem-status/minhas-aulas-adm-depois.png)
+Depois 2 (AdminDashboard.jsx)
+![Depois (Professor.jsx))](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/1af01ceb9a69de97b903e95aff4cb7a28abb4ca1/5-Redesign/3-tela-sem-status/minhas-aulas-adm-2-depois.png)
 
 ---
 
