@@ -3,19 +3,22 @@ import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs"; 
 import axiosInstance from "../utils/axiosInstance";
 import GerenciarAulasModal from "../components/GerenciarAulasModal";
-// A importação do VideoCard foi removida porque não estava a ser usada diretamente aqui
+import { FaInbox } from "react-icons/fa"; // <-- Ícone mantido
 
 export default function Professor() {
   const [aulas, setAulas] = useState([]);
   const [showGerenciar, setShowGerenciar] = useState(false);
+  const [loading, setLoading] = useState(true); 
   
   const navigate = useNavigate();
 
   const carregarAulas = () => {
+    setLoading(true); 
     axiosInstance
       .get("aulas/")
       .then((r) => setAulas(r.data))
-      .catch(console.error);
+      .catch(console.error)
+      .finally(() => setLoading(false)); 
   };
 
   useEffect(() => {
@@ -24,20 +27,34 @@ export default function Professor() {
     carregarAulas();
   }, [navigate]);
 
-  return (
-    <main role="main" className="flex-1 p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-green-600 dark:text-green-400">
-          Minhas Aulas
-        </h1>
-        <button
-          onClick={() => setShowGerenciar(true)}
-          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
-        >
-          Gerenciar Aulas
-        </button>
-      </div>
+  const renderContent = () => {
+    // Estado de Carregamento
+    if (loading) {
+      return (
+        <div className="text-center text-gray-500 dark:text-gray-400">
+          <p>Carregando aulas...</p>
+        </div>
+      );
+    }
 
+    // VVVVVV BOTÃO DUPLICADO REMOVIDO DESTE BLOCO VVVVVV
+    // Estado Vazio (Nenhuma aula encontrada)
+    if (aulas.length === 0) {
+      return (
+        <div className="text-center text-gray-500 dark:text-gray-400 p-10 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
+          <FaInbox className="text-4xl mx-auto mb-4" />
+          <h3 className="text-xl font-semibold mb-2">Nenhuma aula publicada</h3>
+          <p className="text-sm">
+            Clique em "Gerenciar Aulas" no canto superior para começar a publicar seu conteúdo.
+          </p>
+          {/* O BOTÃO QUE ESTAVA AQUI FOI REMOVIDO */}
+        </div>
+      );
+    }
+    // ^^^^^^ FIM DA CORREÇÃO ^^^^^^
+
+    // Estado com Conteúdo (Lista de aulas)
+    return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {aulas.map((a) => (
           <div
@@ -84,6 +101,24 @@ export default function Professor() {
           </div>
         ))}
       </div>
+    );
+  };
+
+  return (
+    <main role="main" className="flex-1 p-6">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold text-green-600 dark:text-green-400">
+          Minhas Aulas
+        </h1>
+        <button
+          onClick={() => setShowGerenciar(true)}
+          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
+        >
+          Gerenciar Aulas
+        </button>
+      </div>
+
+      {renderContent()}
 
       <GerenciarAulasModal
         isOpen={showGerenciar}
