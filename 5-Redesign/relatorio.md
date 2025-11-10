@@ -90,7 +90,7 @@ Depois (Professor.jsx)
 Antes (Login.jsx)
 ![Antes (Login.jsx)](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/c11cef0991fd2215ec980348fbf37c77400d16e2/5-Redesign/4-botao-semelhante/cadastro-antes.png?raw=true)
 Depois (Login.jsx)
-![Depois (Login.jsx)](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/c11cef0991fd2215ec980348fbf37c77400d16e2/5-Redesign/4-botao-semelhante/cadastro-depois.png?raw=true)
+![Depois (Login.jsx)](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/e3a4fea328dec25099b527b19ad5d4a89e52f8cb/5-Redesign/4-botao-semelhante/cadastro-depois.png)
 
 ---
 
@@ -106,9 +106,9 @@ Conforme planejado, duas novas funcionalidades relevantes foram implementadas pa
 **Evidências (Antes e Depois):**
 
 Antes (Sem busca)
-![Antes (Sem busca)](COLE_O_LINK_DO_PRINT_AQUI?raw=true)
+![Antes (Sem busca)](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/e3a4fea328dec25099b527b19ad5d4a89e52f8cb/5-Redesign/7-Funcionalidade-busca/antes-busca-antes.png)
 Depois (Com busca)
-![Depois (Com busca)](COLE_O_LINK_DO_PRINT_AQUI?raw=true)
+![Depois (Com busca)](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/e3a4fea328dec25099b527b19ad5d4a89e52f8cb/5-Redesign/7-Funcionalidade-busca/busca-depois.png)
 
 ---
 
@@ -120,9 +120,9 @@ Depois (Com busca)
 **Evidências (Antes e Depois):**
 
 Antes (Fórum sem likes)
-![Antes (Fórum sem likes)](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/94ceef8bc2e28a84485b94e3f0af00c5e0876240/5-Redesign/5-evidencias-antes/forum-turma-adm.png?raw=true)
+![Antes (Fórum sem likes)](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/e3a4fea328dec25099b527b19ad5d4a89e52f8cb/5-Redesign/8-Funcionalidade-curtida/funcionalidade-curtida-antes.png)
 Depois (Fórum com likes)
-![Depois (Fórum com likes)](COLE_O_LINK_DO_PRINT_AQUI?raw=true)
+![Depois (Fórum com likes)](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/e3a4fea328dec25099b527b19ad5d4a89e52f8cb/5-Redesign/8-Funcionalidade-curtida/funcionalidade-curtida-depois.png)
 
 ---
 
@@ -136,9 +136,9 @@ Depois (Fórum com likes)
 **Evidências (Relatórios Lighthouse):**
 
 Antes (Falha de Contraste)
-![Antes (Falha de Contraste)](COLE_O_LINK_DO_PRINT_AQUI?raw=true)
+![Antes (Falha de Contraste)](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/e520daa9462f4305bf20d7d2ae8ae08137e9a230/5-Redesign/5-evidencias-antes/Funcionalidade-curtida-antes.png)
 Depois (Aprovado)
-![Depois (Aprovado)](COLE_O_LINK_DO_PRINT_AQUI?raw=true)
+![Depois (Aprovado)](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/e520daa9462f4305bf20d7d2ae8ae08137e9a230/5-Redesign/5-evidencias-antes/Funcionalidade-curtida-depois.png)
 
 ---
 
@@ -153,7 +153,7 @@ Foi adotado um fluxo de trabalho baseado em Git Flow simplificado:
 ### Evidência
 
 Histórico de Commits e Branches
-![Histórico Git](COLE_O_LINK_DO_PRINT_AQUI?raw=true)
+![Histórico Git]([COLE_O_LINK_DO_PRINT_AQUI?raw=true](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/e520daa9462f4305bf20d7d2ae8ae08137e9a230/5-Redesign/6-versionamento/Branchs.png))
 
 ---
 
