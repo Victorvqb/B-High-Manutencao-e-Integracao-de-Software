@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../utils/axiosInstance";
-// VVVVVV ÍCONES PARA O REDESIGN ADICIONADOS VVVVVV
-import { FaEdit, FaTrash, FaReply } from "react-icons/fa"; 
+import { FaEdit, FaTrash, FaReply } from "react-icons/fa"; // <-- 1. ÍCONES IMPORTADOS
 
 export default function ForumProfessor() {
   const [comentarios, setComentarios] = useState([]);
@@ -67,8 +66,9 @@ export default function ForumProfessor() {
   };
 
   const salvarEdicao = async () => {
-    const { id, texto, isResposta } = editando;
+    const { id, texto, isResposta, comentarioPaiId } = editando;
     if (!texto.trim()) return;
+
     try {
         if (isResposta) {
             // Lógica para editar resposta (precisaria de um endpoint específico)
@@ -118,9 +118,9 @@ export default function ForumProfessor() {
         <div className="space-y-4">
             {comentarios.map(comentario => (
                 <div key={comentario.id} className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
-                    <p className="text-gray-900 dark:text-white"><strong>{comentario.autor_nome}:</strong> {comentario.texto}</p>
+                    <p><strong>{comentario.autor_nome}:</strong> {comentario.texto}</p>
                     
-                    {/* VVVVVV CÓDIGO DE REDESIGN (ETAPA 1) CORRIGIDO VVVVVV */}
+                    {/* VVVVVV 2. ESTE É O BLOCO MODIFICADO VVVVVV */}
                     <div className="flex gap-2 text-xs mt-2">
                         <button 
                             onClick={() => setRespostaAtiva(respostaAtiva === comentario.id ? null : comentario.id)}
@@ -146,13 +146,13 @@ export default function ForumProfessor() {
                             </>
                         )}
                     </div>
-                    {/* ^^^^^^ FIM DA CORREÇÃO ^^^^^^ */}
+                    {/* ^^^^^^ FIM DO BLOCO MODIFICADO ^^^^^^ */}
                     
                     {/* Respostas */}
                     <div className="ml-6 mt-2 space-y-2 border-l-2 pl-4 dark:border-gray-700">
                         {comentario.respostas.map(resposta => (
                             <div key={resposta.id}>
-                                <p className="text-gray-800 dark:text-gray-200"><strong>{resposta.autor_nome}:</strong> {resposta.texto}</p>
+                                <p><strong>{resposta.autor_nome}:</strong> {resposta.texto}</p>
                             </div>
                         ))}
                     </div>
