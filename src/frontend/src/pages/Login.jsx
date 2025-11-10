@@ -2,13 +2,14 @@ import React, { useState } from "react";
 import axios from "../utils/axiosInstance";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
-import { AUTH_KEYS } from "../utils/constants"; // <-- IMPORTA AS CONSTANTES
+import { AUTH_KEYS } from "../utils/constants"; 
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [souAdmin, setSouAdmin] = useState(false);
   const [erroLogin, setErroLogin] = useState("");
+  const [isLoading, setIsLoading] = useState(false); // <-- ESTADO DE LOADING
   const navigate = useNavigate();
 
   const handleLogin = async () => {
@@ -18,6 +19,8 @@ export default function Login() {
       setErroLogin("Por favor, preencha todos os campos.");
       return;
     }
+
+    setIsLoading(true); // <-- ATIVA LOADING
 
     try {
       const response = await axios.post("token/", {
@@ -32,29 +35,30 @@ export default function Login() {
       const isSuperuser = decoded.is_superuser === true || decoded.is_superuser === "true";
       const userFromBackend = decoded.username;
 
-      // --- INÍCIO DA MODIFICAÇÃO (Magic Strings) ---
       localStorage.setItem(AUTH_KEYS.ACCESS, access);
       localStorage.setItem(AUTH_KEYS.REFRESH, refresh);
       localStorage.setItem(AUTH_KEYS.USERNAME, userFromBackend);
       localStorage.setItem(AUTH_KEYS.IS_STAFF, JSON.stringify(isStaff));
       localStorage.setItem(AUTH_KEYS.IS_SUPERUSER, JSON.stringify(isSuperuser));
       localStorage.removeItem(AUTH_KEYS.FOTO_PERFIL);
-      // --- FIM DA MODIFICAÇÃO ---
 
+      // --- CORREÇÃO: USAR NAVIGATE EM VEZ DE window.location ---
       if (souAdmin) {
         if (isSuperuser && userFromBackend === "admin") {
-          window.location.href = "/admin-dashboard";
+          navigate("/admin-dashboard");
         } else if (isStaff) {
-          window.location.href = "/professor";
+          navigate("/professor");
         } else {
           setErroLogin("Você não tem permissão de administrador.");
           localStorage.clear();
         }
       } else {
-        window.location.href = "/home";
+        navigate("/home");
       }
     } catch (err) {
       setErroLogin("Usuário ou senha inválidos.");
+    } finally {
+      setIsLoading(false); // <-- DESATIVA LOADING
     }
   };
 
@@ -102,16 +106,20 @@ export default function Login() {
 
         <button
           onClick={handleLogin}
-          className="w-full bg-green-600 hover:bg-green-500 text-white py-2 rounded-md mb-3"
+          disabled={isLoading} // <-- DESABILITA BOTÃO ENQUANTO CARREGA
+          className="w-full bg-green-600 hover:bg-green-500 text-white py-2 rounded-md mb-3 disabled:bg-gray-400"
         >
-          Entrar
+          {isLoading ? "Entrando..." : "Entrar"} {/* <-- MUDA TEXTO */}
         </button>
+        
+        {/* VVVVVV BOTÃO DE CADASTRO MODIFICADO AQUI VVVVVV */}
         <button
           onClick={() => navigate("/cadastro")}
-          className="w-full border border-gray-400 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 text-black dark:text-white py-2 rounded-md"
+          className="w-full text-center text-green-600 dark:text-green-400 hover:underline py-2 rounded-md"
         >
           Cadastrar-se
         </button>
+        {/* ^^^^^^ FIM DA MODIFICAÇÃO ^^^^^^ */}
       </div>
     </div>
   );
