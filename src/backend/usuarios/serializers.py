@@ -64,20 +64,16 @@ class AulaSerializer(serializers.ModelSerializer):
     arquivo = serializers.FileField(use_url=True, required=False)
     agendada = serializers.BooleanField(required=False)
     
-    # --- INÍCIO DA MODIFICAÇÃO (MIGRAÇÃO DE API) ---
-    # Adicionamos o 'source' para obter o "display name" (ex: "Upload de Vídeo")
     tipo_conteudo_display = serializers.CharField(source='get_tipo_conteudo_display', read_only=True)
 
     class Meta:
         model = Aula
-        # Adicionado "tipo_conteudo" e "tipo_conteudo_display"
         fields = [
             "id", "titulo", "descricao", "tipo_conteudo", "tipo_conteudo_display",
             "video_url", "arquivo", "data", "hora", "agendada", 
             "professor", "criada_em"
         ]
         extra_kwargs = { "professor": {"read_only": True} }
-    # --- FIM DA MODIFICAÇÃO ---
 
 # ─── Entrega ─────────────────────────────
 class EntregaSerializer(serializers.ModelSerializer):
@@ -156,24 +152,53 @@ class AtividadeSerializer(serializers.ModelSerializer):
         fields = "__all__"
         extra_kwargs = {"professor": {"read_only": True}}
 
-# ─── Resposta Fórum ──────────────────────
+# VVVVVV SERIALIZER DE RESPOSTA DO FÓRUM ATUALIZADO VVVVVV
 class RespostaForumSerializer(serializers.ModelSerializer):
     autor_nome = serializers.CharField(source="autor.username", read_only=True)
     autor_username = serializers.CharField(source="autor.username", read_only=True)
+    # Novos campos para likes
+    likes_count = serializers.SerializerMethodField()
+    usuario_curtiu = serializers.SerializerMethodField()
 
     class Meta:
         model = RespostaForum
-        fields = ["id", "texto", "autor_nome", "autor_username", "criado_em"]
+        fields = ["id", "texto", "autor_nome", "autor_username", "criado_em", "likes_count", "usuario_curtiu"]
 
-# ─── Comentário Fórum ────────────────────
+    def get_likes_count(self, obj):
+        return obj.likes.count()
+
+    def get_usuario_curtiu(self, obj):
+        # Tenta pegar o usuário do contexto da requisição
+        request = self.context.get('request')
+        if not request or not request.user.is_authenticated:
+            return False
+        return obj.likes.filter(id=request.user.id).exists()
+# ^^^^^^ FIM DA MUDANÇA ^^^^^^
+
+
+# VVVVVV SERIALIZER DE COMENTÁRIO DO FÓRUM ATUALIZADO VVVVVV
 class ComentarioForumSerializer(serializers.ModelSerializer):
     autor_nome = serializers.CharField(source="autor.username", read_only=True)
     autor_username = serializers.CharField(source="autor.username", read_only=True)
     respostas = RespostaForumSerializer(many=True, read_only=True)
+    # Novos campos para likes
+    likes_count = serializers.SerializerMethodField()
+    usuario_curtiu = serializers.SerializerMethodField()
 
     class Meta:
         model = ComentarioForum
-        fields = ["id", "texto", "autor_nome", "autor_username", "criado_em", "respostas"]
+        fields = ["id", "texto", "autor_nome", "autor_username", "criado_em", "respostas", "likes_count", "usuario_curtiu"]
+
+    def get_likes_count(self, obj):
+        return obj.likes.count()
+
+    def get_usuario_curtiu(self, obj):
+        # Tenta pegar o usuário do contexto da requisição
+        request = self.context.get('request')
+        if not request or not request.user.is_authenticated:
+            return False
+        return obj.likes.filter(id=request.user.id).exists()
+# ^^^^^^ FIM DA MUDANÇA ^^^^^^
 
 # ─── Desempenho ───────────────────────────
 class DesempenhoSerializer(serializers.ModelSerializer):

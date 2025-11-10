@@ -33,7 +33,6 @@ def validate_aula_arquivo(value):
 class Aula(models.Model):
     """Modelo de Aulas Postadas por Professores"""
 
-    # --- INÍCIO DA MODIFICAÇÃO (MIGRAÇÃO DE API) ---
     class TipoConteudo(models.TextChoices):
         URL_EXTERNA = 'video_url', 'Link de Vídeo Externo'
         UPLOAD_VIDEO = 'video_upload', 'Upload de Vídeo'
@@ -55,13 +54,12 @@ class Aula(models.Model):
         help_text="Use para links do YouTube, Vimeo, etc. (se tipo_conteudo='video_url')"
     )
     arquivo = models.FileField(
-        upload_to="aulas_uploads/", # Nova pasta para uploads
+        upload_to="aulas_uploads/", 
         blank=True, 
         null=True, 
-        validators=[validate_aula_arquivo], # Validador unificado
+        validators=[validate_aula_arquivo], 
         help_text="Use para uploads de .mp4, .mov ou .pdf"
     )
-    # --- FIM DA MODIFICAÇÃO ---
     
     data = models.DateField()
     hora = models.TimeField()
@@ -70,13 +68,11 @@ class Aula(models.Model):
     criada_em = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
-        # Limpa o campo desnecessário
         if self.tipo_conteudo == 'video_url':
             self.arquivo = None
         elif self.tipo_conteudo in ['video_upload', 'pdf']:
             self.video_url = ''
         
-        # Define o tipo com base nos dados, se ainda for indefinido
         if self.tipo_conteudo == 'undefined':
             if self.video_url:
                 self.tipo_conteudo = self.TipoConteudo.URL_EXTERNA
@@ -168,9 +164,22 @@ class ComentarioForum(models.Model):
     autor = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name="comentarios_forum")
     texto = models.TextField()
     criado_em = models.DateTimeField(auto_now_add=True)
+    # VVVVVV MUDANÇA (ETAPA 2) VVVVVV
+    likes = models.ManyToManyField(Usuario, related_name='comentarios_curtidos', blank=True)
+    # ^^^^^^ FIM DA MUDANÇA ^^^^^^
 
     def __str__(self):
         return f"{self.autor.username}: {self.texto[:30]}"
+
+    # VVVVVV PROPRIEDADES ADICIONADAS (para o frontend) VVVVVV
+    @property
+    def autor_nome(self):
+        return self.autor.first_name or self.autor.username
+
+    @property
+    def autor_username(self):
+        return self.autor.username
+    # ^^^^^^ FIM DAS PROPRIEDADES ^^^^^^
 
 
 class RespostaForum(models.Model):
@@ -178,9 +187,18 @@ class RespostaForum(models.Model):
     autor = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name="respostas_forum")
     texto = models.TextField()
     criado_em = models.DateTimeField(auto_now_add=True)
+    # VVVVVV MUDANÇA (ETAPA 2) VVVVVV
+    likes = models.ManyToManyField(Usuario, related_name='respostas_curtidas', blank=True)
+    # ^^^^^^ FIM DA MUDANÇA ^^^^^^
 
     def __str__(self):
         return f"{self.autor.username} respondeu: {self.texto[:30]}"
+
+    # VVVVVV PROPRIEDADE ADICIONADA (para o frontend) VVVVVV
+    @property
+    def autor_nome(self):
+        return self.autor.first_name or self.autor.username
+    # ^^^^^^ FIM DA PROPRIEDADE ^^^^^^
 
 
 # ─── Desempenho ────────────────────────────────────────────────
