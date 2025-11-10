@@ -34,9 +34,11 @@ Com base na avaliação, foram implementadas 4 correções de redesign, com o ob
 
 **Evidências (Antes e Depois):**
 
-| Antes (FórumProfessor.jsx) | Depois (FórumProfessor.jsx) |
-| :---: | :---: |
-| [INSERIR PRINT DA TELA DO FÓRUM "ANTES"] | [INSERIR PRINT DA TELA DO FÓRUM "DEPOIS"] |
+Antes (FórumProfessor.jsx) 
+(https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/1203c09646d6888f94ad5e1ac24a7252e0dded6c/5-Redesign/1-%20botao-editar-excluir/Botao-Antes.png)
+Depois (FórumProfessor.jsx) 
+(https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/1203c09646d6888f94ad5e1ac24a7252e0dded6c/5-Redesign/1-%20botao-editar-excluir/Botao-Depois.png)
+
 
 ---
 
