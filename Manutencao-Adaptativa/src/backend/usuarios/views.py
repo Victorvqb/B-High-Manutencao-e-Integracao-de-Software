@@ -168,6 +168,9 @@ class RespostaQuizView(ListAPIView):
     def get_queryset(self):
         return RespostaQuiz.objects.filter(aluno=self.request.user)
 
+
+#
+# TESTE AB
 class QuizSubmitView(APIView):
     permission_classes = [permissions.IsAuthenticated]
     def post(self, request, pk):

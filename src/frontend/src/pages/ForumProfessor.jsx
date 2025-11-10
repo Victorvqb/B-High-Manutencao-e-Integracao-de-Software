@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../utils/axiosInstance";
+import { FaEdit, FaTrash, FaReply } from "react-icons/fa"; // <-- 1. ÍCONES IMPORTADOS
 
 export default function ForumProfessor() {
   const [comentarios, setComentarios] = useState([]);
@@ -118,16 +119,34 @@ export default function ForumProfessor() {
             {comentarios.map(comentario => (
                 <div key={comentario.id} className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
                     <p><strong>{comentario.autor_nome}:</strong> {comentario.texto}</p>
-                    {/* Botões de Ação para Comentários */}
+                    
+                    {/* VVVVVV 2. ESTE É O BLOCO MODIFICADO VVVVVV */}
                     <div className="flex gap-2 text-xs mt-2">
-                        <button onClick={() => setRespostaAtiva(respostaAtiva === comentario.id ? null : comentario.id)} className="text-blue-500">Responder</button>
+                        <button 
+                            onClick={() => setRespostaAtiva(respostaAtiva === comentario.id ? null : comentario.id)}
+                            className="flex items-center gap-1 bg-blue-500 hover:bg-blue-400 text-white px-3 py-1 rounded text-xs transition-colors"
+                        >
+                            <FaReply /> Responder
+                        </button>
+                        
                         {comentario.autor_username === username && (
                             <>
-                                <button onClick={() => iniciarEdicao(comentario.id, comentario.texto)} className="text-yellow-500">Editar</button>
-                                <button onClick={() => apagar(comentario.id)} className="text-red-500">Apagar</button>
+                                <button 
+                                    onClick={() => iniciarEdicao(comentario.id, comentario.texto)} 
+                                    className="flex items-center gap-1 bg-yellow-500 hover:bg-yellow-400 text-white px-3 py-1 rounded text-xs transition-colors"
+                                >
+                                    <FaEdit /> Editar
+                                </button>
+                                <button 
+                                    onClick={() => apagar(comentario.id)} 
+                                    className="flex items-center gap-1 bg-red-600 hover:bg-red-500 text-white px-3 py-1 rounded text-xs transition-colors"
+                                >
+                                    <FaTrash /> Apagar
+                                </button>
                             </>
                         )}
                     </div>
+                    {/* ^^^^^^ FIM DO BLOCO MODIFICADO ^^^^^^ */}
                     
                     {/* Respostas */}
                     <div className="ml-6 mt-2 space-y-2 border-l-2 pl-4 dark:border-gray-700">
