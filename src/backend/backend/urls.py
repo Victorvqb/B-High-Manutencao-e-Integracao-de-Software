@@ -23,6 +23,11 @@ from usuarios.views import (
 
     # Fórum
     ForumAPIView, ResponderComentarioAPIView,
+    
+    # VVVVVV IMPORTAÇÕES DA ETAPA 2 (LIKES) VVVVVV
+    ToggleLikeComentarioView,
+    ToggleLikeRespostaView,
+    # ^^^^^^ FIM DA MUDANÇA ^^^^^^
 
     # Desempenho
     DesempenhoCreateListView, DesempenhoDetailView,
@@ -86,6 +91,11 @@ urlpatterns = [
     path("api/forum/", ForumAPIView.as_view(), name="forum"),
     path("api/forum/<int:pk>/", ForumAPIView.as_view(), name="forum_detail"),
     path("api/forum/<int:pk>/responder/", ResponderComentarioAPIView.as_view(), name="forum_responder"),
+
+    # VVVVVV ROTAS DE LIKE ADICIONADAS (ETAPA 2) VVVVVV
+    path('api/forum/comentario/<int:comentario_id>/like/', ToggleLikeComentarioView.as_view(), name='like-comentario'),
+    path('api/forum/resposta/<int:resposta_id>/like/', ToggleLikeRespostaView.as_view(), name='like-resposta'),
+    # ^^^^^^ FIM DA MUDANÇA ^^^^^^
 
     # Desempenho
     path("api/desempenhos/", DesempenhoCreateListView.as_view(), name="desempenhos"),

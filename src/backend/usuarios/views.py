@@ -7,11 +7,7 @@ from django.db.models import Exists, OuterRef, Q
 from rest_framework.parsers import MultiPartParser
 from googleapiclient.discovery import build
 from django.core.cache import cache
-from rest_framework.views import APIView
 from django.utils import timezone
-from rest_framework.response import Response
-from django.db.models import Exists, OuterRef, Q
-from rest_framework.parsers import MultiPartParser
 from rest_framework import serializers
 from .models import Quiz
 from rest_framework import status
@@ -49,15 +45,15 @@ from .serializers import (
     CustomTokenObtainPairSerializer,
     AtividadeSerializer,
     ComentarioForumSerializer,
+    RespostaForumSerializer, # <--- ADICIONADO PARA CLAREZA
     DesempenhoSerializer,
     SolicitacaoProfessorSerializer,
     YouTubeVideoSerializer,
 )
 
-# --- INÍCIO DA REFATORAÇÃO 5 (Introduce Constant) ---
+# --- Constantes ---
 YOUTUBE_CHANNEL_ID = 'UC_x5XG1OV2P6uZZ5FSM9Ttw'
 YOUTUBE_CACHE_KEY = 'youtube_videos'
-# --- FIM DA REFATORAÇÃO 5 ---
 
 
 #  Entregas 
@@ -111,7 +107,6 @@ class AulaView(ListCreateAPIView):
     def perform_create(self, serializer):
         agendada = self.request.data.get("agendada", "false").lower() == "true"
         
-        # Lógica da Migração de API (Nova Funcionalidade)
         tipo_conteudo = self.request.data.get("tipo_conteudo", "undefined")
         if tipo_conteudo == 'undefined':
             if self.request.data.get("video_url"):
@@ -190,18 +185,14 @@ class QuizDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 class RespostaQuizView(ListAPIView):
     serializer_class = RespostaQuizSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     def get_queryset(self):
         return RespostaQuiz.objects.filter(aluno=self.request.user)
 
-# --- INÍCIO DA REFATORAÇÃO 1: Extract Method ---
 class QuizSubmitView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def _calculate_score(self, respostas):
-        """
-        Método extraído para calcular a pontuação com base nas respostas.
-        """
         acertos = 0
         for question_id, alternativa_id in respostas.items():
             try:
@@ -221,7 +212,6 @@ class QuizSubmitView(APIView):
         comentario = request.data.get("comentario", "")
         arquivo = request.FILES.get("arquivo")
         
-        # Lógica de cálculo agora está encapsulada
         acertos = self._calculate_score(respostas)
             
         entrega = Entrega.objects.create(
@@ -236,7 +226,6 @@ class QuizSubmitView(APIView):
             aluno=request.user, quiz=quiz, resposta=respostas, nota=acertos
         )
         return Response({"message": "Respostas enviadas.", "score": acertos})
-# --- FIM DA REFATORAÇÃO 1 ---
 
 
 #  Usuários 
@@ -333,36 +322,47 @@ class AtividadeDetailView(RetrieveUpdateDestroyAPIView):
         user = self.request.user
         return Atividade.objects.filter(professor=user) if user.is_staff else Atividade.objects.all()
 
-# --- REFATORAÇÃO 3: Remove Dead Code ---
-# A view 'EnviarAtividadeView' foi removida.
-# A lógica de entrega é tratada por 'EntregaView'.
-# --- FIM DA REFATORAÇÃO 3 ---
-
-
 #  Fórum 
 class ForumAPIView(APIView):
     permission_classes = [IsAuthenticated]
+    
+    # VVVVVV MUDANÇA (ETAPA 2): Passando contexto para o Serializer VVVVVV
+    def get_serializer_context(self):
+        return {'request': self.request}
+
     def get(self, request):
         comentarios = ComentarioForum.objects.all().order_by("-id")
-        serializer = ComentarioForumSerializer(comentarios, many=True)
+        serializer = ComentarioForumSerializer(comentarios, many=True, context=self.get_serializer_context())
         return Response(serializer.data)
+    # ^^^^^^ FIM DA MUDANÇA ^^^^^^
+    
     def post(self, request):
         comentario = ComentarioForum.objects.create(
             autor=request.user, texto=request.data.get("texto")
         )
-        return Response({"id": comentario.id})
+        serializer = ComentarioForumSerializer(comentario, context=self.get_serializer_context()) # Passa o contexto
+        return Response(serializer.data, status=status.HTTP_201_CREATED) # Retorna o obj criado
+
     def put(self, request, pk):
         comentario = get_object_or_404(ComentarioForum, pk=pk, autor=request.user)
         comentario.texto = request.data.get("texto", comentario.texto)
         comentario.save()
-        return Response({"detail": "Comentário atualizado"})
+        serializer = ComentarioForumSerializer(comentario, context=self.get_serializer_context()) # Passa o contexto
+        return Response(serializer.data)
+        
     def delete(self, request, pk):
         comentario = get_object_or_404(ComentarioForum, pk=pk, autor=request.user)
         comentario.delete()
-        return Response({"detail": "Comentário apagado"})
+        return Response({"detail": "Comentário apagado"}, status=status.HTTP_204_NO_CONTENT)
 
 class ResponderComentarioAPIView(APIView):
     permission_classes = [IsAuthenticated]
+
+    # VVVVVV MUDANÇA (ETAPA 2): Passando contexto para o Serializer VVVVVV
+    def get_serializer_context(self):
+        return {'request': self.request}
+    # ^^^^^^ FIM DA MUDANÇA ^^^^^^
+
     def post(self, request, pk):
         comentario = ComentarioForum.objects.filter(pk=pk).first()
         if not comentario:
@@ -370,7 +370,8 @@ class ResponderComentarioAPIView(APIView):
         resposta = RespostaForum.objects.create(
             comentario=comentario, autor=request.user, texto=request.data.get("texto")
         )
-        return Response({"id": resposta.id})
+        serializer = RespostaForumSerializer(resposta, context=self.get_serializer_context()) # Passa o contexto
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 #  Desempenho 
 class DesempenhoCreateListView(ListCreateAPIView):
@@ -391,7 +392,6 @@ class SolicitacaoProfessorCreateView(ListCreateAPIView):
     serializer_class = SolicitacaoProfessorSerializer
     permission_classes = [AllowAny]
 
-# --- INÍCIO DA REFATORAÇÃO DE DESIGN (Facade) ---
 class SolicitacaoProfessorAdminViewSet(viewsets.ViewSet):
     permission_classes = [IsAdminUser]
     
@@ -406,7 +406,6 @@ class SolicitacaoProfessorAdminViewSet(viewsets.ViewSet):
         if not solicitacao:
             return Response({"detail": "Não encontrada"}, status=404)
 
-        # Lógica de negócio movida para a Facade
         success, message = ProfessorApprovalService.approve(solicitacao)
         
         if not success:
@@ -425,7 +424,6 @@ class SolicitacaoProfessorAdminViewSet(viewsets.ViewSet):
             return Response({"detail": "Rejeitada"})
         else:
             return Response({"detail": "Não é possível rejeitar uma solicitação já aprovada."}, status=400)
-# --- FIM DA REFATORAÇÃO DE DESIGN ---
 
 #  YouTube Videos 
 class YouTubeVideosView(APIView):
@@ -433,9 +431,7 @@ class YouTubeVideosView(APIView):
     def get(self, request, *args, **kwargs):
         YOUTUBE_API_KEY = os.getenv('YOUTUBE_API_KEY')
       
-        # --- INÍCIO DA REFATORAÇÃO 4 (Introduce Constant) ---
         cached_videos = cache.get(YOUTUBE_CACHE_KEY)
-        # --- FIM DA REFATORAÇÃO 4 ---
         
         if cached_videos:
             print(" Servindo vídeos do YouTube a partir do cache.")
@@ -450,12 +446,10 @@ class YouTubeVideosView(APIView):
             print(" Buscando vídeos novos da API do YouTube...")
             youtube = build('youtube', 'v3', developerKey=YOUTUBE_API_KEY)
             
-            # --- INÍCIO DA REFATORAÇÃO 4 (Introduce Constant) ---
             search_response = youtube.search().list(
                 channelId=YOUTUBE_CHANNEL_ID, part='snippet', maxResults=6,
                 order='date', type='video'
             ).execute()
-            # --- FIM DA REFATORAÇÃO 4 ---
             
             videos = []
             for item in search_response.get('items', []):
@@ -469,9 +463,7 @@ class YouTubeVideosView(APIView):
             serializer = YouTubeVideoSerializer(data=videos, many=True)
             serializer.is_valid(raise_exception=True)
             
-            # --- INÍCIO DA REFATORAÇÃO 4 (Introduce Constant) ---
             cache.set(YOUTUBE_CACHE_KEY, serializer.data, timeout=3600) # Cache por 1 hora
-            # --- FIM DA REFATORAÇÃO 4 ---
             
             return Response(serializer.data)
         except Exception as e:
@@ -510,3 +502,46 @@ class DeleteUserAccountView(APIView):
             {"detail": "Conta apagada com sucesso."},
             status=status.HTTP_204_NO_CONTENT
         )
+
+
+# VVVVVV NOVAS VIEWS ADICIONADAS (ETAPA 2 - LIKES) VVVVVV
+
+class ToggleLikeComentarioView(APIView):
+    """
+    View para curtir ou descurtir um comentário principal do fórum.
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, comentario_id):
+        comentario = get_object_or_404(ComentarioForum, id=comentario_id)
+        user = request.user
+        
+        if user in comentario.likes.all():
+            comentario.likes.remove(user)
+            curtido = False
+        else:
+            comentario.likes.add(user)
+            curtido = True
+            
+        return Response({'curtido': curtido, 'total_likes': comentario.likes.count()}, status=status.HTTP_200_OK)
+
+class ToggleLikeRespostaView(APIView):
+    """
+    View para curtir ou descurtir uma resposta do fórum.
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, resposta_id):
+        resposta = get_object_or_404(RespostaForum, id=resposta_id)
+        user = request.user
+        
+        if user in resposta.likes.all():
+            resposta.likes.remove(user)
+            curtido = False
+        else:
+            resposta.likes.add(user)
+            curtido = True
+            
+        return Response({'curtido': curtido, 'total_likes': resposta.likes.count()}, status=status.HTTP_200_OK)
+
+# ^^^^^^ FIM DAS NOVAS VIEWS ^^^^^^

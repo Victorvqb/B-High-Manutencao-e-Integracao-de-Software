@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react"; // <-- 1. useMemo adicionado
 import dayjs from "dayjs";
 import { jwtDecode } from "jwt-decode";
 import Sidebar from "../components/Sidebar";
 import axiosInstance from "../utils/axiosInstance";
+import { FaSearch } from "react-icons/fa"; // <-- 2. Ícone de busca
 
 const LIMITE_MEDIA = 7;
 const LIMITE_BAIXA = 31;
@@ -15,6 +16,7 @@ export default function AulasAluno() {
   const [media, setMedia] = useState([]);
   const [baixa, setBaixa] = useState([]);
   const [showEntrega, setShowEntrega] = useState(false);
+  const [busca, setBusca] = useState(""); // <-- 3. Estado para a busca
 
   useEffect(() => {
     if (!token) return;
@@ -71,6 +73,19 @@ export default function AulasAluno() {
     }
   }
 
+  // 4. Lógica para filtrar as listas com base na busca
+  const filtrarLista = (lista) => {
+    if (!busca) return lista;
+    return lista.filter(a => 
+      a.titulo.toLowerCase().includes(busca.toLowerCase())
+    );
+  };
+
+  const altaFiltrada = useMemo(() => filtrarLista(alta), [alta, busca]);
+  const mediaFiltrada = useMemo(() => filtrarLista(media), [media, busca]);
+  const baixaFiltrada = useMemo(() => filtrarLista(baixa), [baixa, busca]);
+  // Fim da lógica de filtro
+
   const CardPrioridade = ({ titulo, lista, borda }) => (
     <div className={`rounded border ${borda} bg-white dark:bg-gray-800 p-4 shadow`}>
       <h2 className="text-lg font-semibold text-green-700 dark:text-green-400 mb-2">
@@ -115,6 +130,7 @@ export default function AulasAluno() {
   );
 
   const EntregarModal = () => {
+    // ... (código do modal de entrega permanece o mesmo) ...
     const [selAula, setSelAula] = useState("");
     const [selArquivo, setSelArquivo] = useState(null);
 
@@ -212,23 +228,38 @@ export default function AulasAluno() {
           </button>
         </div>
 
+        {/* VVVVVV 5. BARRA DE BUSCA ADICIONADA AQUI VVVVVV */}
+        <div className="mb-6 relative">
+          <input
+            type="text"
+            value={busca}
+            onChange={(e) => setBusca(e.target.value)}
+            placeholder="Buscar aula por título..."
+            className="w-full p-2 pl-10 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-black dark:text-white"
+          />
+          <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+        </div>
+        {/* ^^^^^^ FIM DA BARRA DE BUSCA ^^^^^^ */}
+
+        {/* VVVVVV 6. CARDS USANDO AS LISTAS FILTRADAS VVVVVV */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <CardPrioridade
             titulo="Alta prioridade (vence hoje)"
             borda="border-red-300"
-            lista={alta}
+            lista={altaFiltrada} 
           />
           <CardPrioridade
             titulo="Média prioridade (próx. 7 dias)"
             borda="border-yellow-300"
-            lista={media}
+            lista={mediaFiltrada}
           />
           <CardPrioridade
             titulo="Baixa prioridade (até 31 dias)"
             borda="border-blue-300"
-            lista={baixa}
+            lista={baixaFiltrada}
           />
         </div>
+        {/* ^^^^^^ FIM DOS CARDS ^^^^^^ */}
 
         {showEntrega && <EntregarModal />}
       </main>

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../utils/axiosInstance";
+// VVVVVV ÍCONE DE CORAÇÃO ADICIONADO VVVVVV
+import { FaEdit, FaTrash, FaReply, FaHeart } from "react-icons/fa"; 
 
 export default function ForumProfessor() {
   const [comentarios, setComentarios] = useState([]);
@@ -30,7 +32,10 @@ export default function ForumProfessor() {
 
   const fetchComentarios = async () => {
     try {
-      const { data } = await axiosInstance.get("forum/");
+      // ATUALIZADO: Passa o 'context' para o serializer saber quem está logado
+      const { data } = await axiosInstance.get("forum/", {
+        params: { context: 'request' } 
+      });
       setComentarios(data);
     } catch (err) {
       console.error("Erro ao carregar comentários:", err);
@@ -65,13 +70,11 @@ export default function ForumProfessor() {
   };
 
   const salvarEdicao = async () => {
-    const { id, texto, isResposta, comentarioPaiId } = editando;
+    const { id, texto, isResposta } = editando;
     if (!texto.trim()) return;
-
     try {
         if (isResposta) {
-            // Lógica para editar resposta (precisaria de um endpoint específico)
-            // await axiosInstance.put(`forum/respostas/${id}/`, { texto });
+            // await axiosInstance.put(`forum/respostas/${id}/`, { texto }); // Endpoint hipotético
         } else {
             await axiosInstance.put(`forum/${id}/`, { texto });
         }
@@ -85,11 +88,9 @@ export default function ForumProfessor() {
   const apagar = async (id, isResposta = false) => {
     const confirmDelete = window.confirm("Tem a certeza que quer apagar?");
     if (!confirmDelete) return;
-
     try {
         if (isResposta) {
-            // Lógica para apagar resposta (precisaria de um endpoint específico)
-            // await axiosInstance.delete(`forum/respostas/${id}/`);
+            // await axiosInstance.delete(`forum/respostas/${id}/`); // Endpoint hipotético
         } else {
             await axiosInstance.delete(`forum/${id}/`);
         }
@@ -98,6 +99,50 @@ export default function ForumProfessor() {
         console.error("Erro ao apagar:", err);
     }
   };
+
+  // VVVVVV NOVA FUNÇÃO DE LIKE (ETAPA 2) VVVVVV
+  const handleLike = async (id, isResposta = false) => {
+    const url = isResposta
+      ? `forum/resposta/${id}/like/`
+      : `forum/comentario/${id}/like/`;
+    
+    try {
+      const { data } = await axiosInstance.post(url);
+
+      // Atualiza o estado local (UI Otimista)
+      setComentarios(prevComentarios => {
+        return prevComentarios.map(com => {
+          if (!isResposta && com.id === id) {
+            return {
+              ...com,
+              likes_count: data.total_likes,
+              usuario_curtiu: data.curtido,
+            };
+          }
+          if (isResposta) {
+            return {
+              ...com,
+              respostas: com.respostas.map(res => {
+                if (res.id === id) {
+                  return {
+                    ...res,
+                    likes_count: data.total_likes,
+                    usuario_curtiu: data.curtido,
+                  };
+                }
+                return res;
+              })
+            };
+          }
+          return com;
+        });
+      });
+
+    } catch (err) {
+      console.error("Erro ao curtir:", err);
+    }
+  };
+  // ^^^^^^ FIM DA FUNÇÃO ^^^^^^
 
   return (
     <main className="flex-1 p-6">
@@ -117,23 +162,58 @@ export default function ForumProfessor() {
         <div className="space-y-4">
             {comentarios.map(comentario => (
                 <div key={comentario.id} className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
-                    <p><strong>{comentario.autor_nome}:</strong> {comentario.texto}</p>
-                    {/* Botões de Ação para Comentários */}
-                    <div className="flex gap-2 text-xs mt-2">
-                        <button onClick={() => setRespostaAtiva(respostaAtiva === comentario.id ? null : comentario.id)} className="text-blue-500">Responder</button>
+                    <p className="text-gray-900 dark:text-white"><strong>{comentario.autor_nome}:</strong> {comentario.texto}</p>
+                    
+                    <div className="flex gap-3 text-xs mt-2 items-center">
+                        {/* VVVVVV BOTÃO DE LIKE ADICIONADO VVVVVV */}
+                        <button 
+                            onClick={() => handleLike(comentario.id, false)}
+                            className={`flex items-center gap-1 ${comentario.usuario_curtiu ? 'text-red-500' : 'text-gray-500 dark:text-gray-400 hover:text-red-500'} transition-colors`}
+                        >
+                            <FaHeart /> {comentario.likes_count || 0}
+                        </button>
+                        {/* ^^^^^^ FIM DO BOTÃO ^^^^^^ */}
+
+                        <button 
+                            onClick={() => setRespostaAtiva(respostaAtiva === comentario.id ? null : comentario.id)}
+                            className="flex items-center gap-1 bg-blue-500 hover:bg-blue-400 text-white px-3 py-1 rounded text-xs transition-colors"
+                        >
+                            <FaReply /> Responder
+                        </button>
+                        
                         {comentario.autor_username === username && (
                             <>
-                                <button onClick={() => iniciarEdicao(comentario.id, comentario.texto)} className="text-yellow-500">Editar</button>
-                                <button onClick={() => apagar(comentario.id)} className="text-red-500">Apagar</button>
+                                <button 
+                                    onClick={() => iniciarEdicao(comentario.id, comentario.texto)} 
+                                    className="flex items-center gap-1 bg-yellow-500 hover:bg-yellow-400 text-white px-3 py-1 rounded text-xs transition-colors"
+                                >
+                                    <FaEdit /> Editar
+                                </button>
+                                <button 
+                                    onClick={() => apagar(comentario.id)} 
+                                    className="flex items-center gap-1 bg-red-600 hover:bg-red-500 text-white px-3 py-1 rounded text-xs transition-colors"
+                                >
+                                    <FaTrash /> Apagar
+                                </button>
                             </>
                         )}
                     </div>
                     
                     {/* Respostas */}
-                    <div className="ml-6 mt-2 space-y-2 border-l-2 pl-4 dark:border-gray-700">
+                    <div className="ml-6 mt-3 space-y-3 border-l-2 pl-4 dark:border-gray-700">
                         {comentario.respostas.map(resposta => (
                             <div key={resposta.id}>
-                                <p><strong>{resposta.autor_nome}:</strong> {resposta.texto}</p>
+                                <p className="text-gray-800 dark:text-gray-200"><strong>{resposta.autor_nome}:</strong> {resposta.texto}</p>
+                                {/* VVVVVV LIKES NAS RESPOSTAS VVVVVV */}
+                                <div className="flex gap-3 text-xs mt-1 items-center">
+                                    <button 
+                                        onClick={() => handleLike(resposta.id, true)}
+                                        className={`flex items-center gap-1 ${resposta.usuario_curtiu ? 'text-red-500' : 'text-gray-500 dark:text-gray-400 hover:text-red-500'} transition-colors`}
+                                    >
+                                        <FaHeart /> {resposta.likes_count || 0}
+                                    </button>
+                                </div>
+                                {/* ^^^^^^ FIM DOS LIKES ^^^^^^ */}
                             </div>
                         ))}
                     </div>
