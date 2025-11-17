@@ -59,12 +59,11 @@ export default function Sidebar({ isStaff: propIsStaff, isAluno: propIsAluno }) 
     navigate("/login");
   };
 
-  // --- CORREÇÃO DA REGRESSÃO VISUAL (Ordem do Menu Revertida) ---
-  // Esta lógica é do arquivo "Antes" que você enviou.
+  // VVVVVV CORREÇÃO DA ORDEM DO MENU AQUI VVVVVV
   const menuItems = [
-    { path: "/youtube-videos", icon: <FaYoutube />, label: "Canal YouTube" },
     ...(isStaff === false ? [
-      { path: "/home", icon: <FaHome />, label: "Home" },
+      { path: "/home", icon: <FaHome />, label: "Home" }, // <-- Home em primeiro
+      { path: "/youtube-videos", icon: <FaYoutube />, label: "Canal YouTube" },
       // O path foi corrigido de /aulas-aluno para /aulas, como no chat.rtf
       { path: "/aulas", icon: <FaBookOpen />, label: "Aulas" }, 
       { path: "/quizzes", icon: <FaPuzzlePiece />, label: "Quizzes" },
@@ -73,7 +72,8 @@ export default function Sidebar({ isStaff: propIsStaff, isAluno: propIsAluno }) 
       { path: "/desempenho-aluno", icon: <FaChartBar />, label: "Desempenho" },
     ] : []),
     ...(isStaff === true ? [
-        { path: "/professor", icon: <FaHome />, label: "Home" },
+        { path: "/professor", icon: <FaHome />, label: "Home" }, // <-- Home em primeiro
+        { path: "/youtube-videos", icon: <FaYoutube />, label: "Canal YouTube" },
         // O path foi corrigido de /aulas-professor para /aulas-prof, como no chat.rtf
         { path: "/aulas-prof", icon: <FaBookOpen />, label: "Aulas" },
         { path: "/quizzes", icon: <FaPuzzlePiece />, label: "Quizzes" },
@@ -84,7 +84,7 @@ export default function Sidebar({ isStaff: propIsStaff, isAluno: propIsAluno }) 
     ] : []),
     { path: "/configuracoes", icon: <FaCog />, label: "Configurações" },
   ];
-  // --- FIM DA CORREÇÃO ---
+  // ^^^^^^ FIM DA CORREÇÃO ^^^^^^
 
 
   const getFotoUrl = () => {

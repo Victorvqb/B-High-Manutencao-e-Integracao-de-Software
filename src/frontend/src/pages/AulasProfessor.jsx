@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
-import Sidebar from "../components/Sidebar";
+// import Sidebar from "../components/Sidebar"; // <-- 1. REMOVIDO
 import axiosInstance from "../utils/axiosInstance";
 
 // -------------------- Modal de Entregas --------------------
@@ -89,11 +89,9 @@ export default function AulasProfessor() {
   const entregasPorAluno = (alunoId) =>
     entregas.filter((e) => Number(e.aluno) === Number(alunoId));
 
+  // VVVVVV 2. DIV EXTERNA E SIDEBAR REMOVIDAS VVVVVV
   return (
-    <div className="flex min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-      <Sidebar isStaff />
-
-      <main className="ml-64 flex-1 p-4 sm:p-6 relative">
+      <main className="flex-1 p-4 sm:p-6 relative">
         <h1 className="mb-4 sm:mb-6 text-xl sm:text-2xl font-bold text-green-600 dark:text-green-400">
           Entregas dos Alunos
         </h1>
@@ -131,6 +129,6 @@ export default function AulasProfessor() {
           />
         )}
       </main>
-    </div>
   );
+  // ^^^^^^ FIM DA CORREÇÃO ^^^^^^
 }

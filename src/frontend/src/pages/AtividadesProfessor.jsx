@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Sidebar from "../components/Sidebar";
+// import Sidebar from "../components/Sidebar"; // <-- 1. REMOVIDO
 import { FaPlus, FaEdit, FaTrash } from "react-icons/fa";
 import axiosInstance from "../utils/axiosInstance";
 
@@ -67,10 +67,9 @@ export default function AtividadesProfessor() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  // VVVVVV 2. DIV EXTERNA E SIDEBAR REMOVIDAS VVVVVV
   return (
-    <div className="flex min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-      <Sidebar isStaff />
-      <main className="ml-64 flex-1 p-6 relative">
+      <main className="flex-1 p-6 relative">
         <h1 className="text-3xl font-bold text-green-600 dark:text-green-400 mb-4">
           Atividades Avaliativas
         </h1>
@@ -168,6 +167,6 @@ export default function AtividadesProfessor() {
           <FaPlus className="mr-2" /> Nova Atividade
         </button>
       </main>
-    </div>
   );
+  // ^^^^^^ FIM DA CORREÇÃO ^^^^^^
 }
