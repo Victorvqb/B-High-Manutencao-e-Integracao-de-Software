@@ -67,14 +67,14 @@ Depois (Aprovado)
 * **Evidências (Antes e Depois):**
   
 Antes (Login)
-*(https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/f09a2ba203fecc25d7237ab796cc4923784eb697/5-Redesign/2%20-%20Etapa%202%20Evolutiva/4%20-%20cadastro-login/tela-login-antes.png)*
+!(https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/f09a2ba203fecc25d7237ab796cc4923784eb697/5-Redesign/2%20-%20Etapa%202%20Evolutiva/4%20-%20cadastro-login/tela-login-antes.png)
 Depois (Login)
-*(https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/f09a2ba203fecc25d7237ab796cc4923784eb697/5-Redesign/2%20-%20Etapa%202%20Evolutiva/4%20-%20cadastro-login/tela-login-depois.png)*
+!(https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/f09a2ba203fecc25d7237ab796cc4923784eb697/5-Redesign/2%20-%20Etapa%202%20Evolutiva/4%20-%20cadastro-login/tela-login-depois.png)
 
 Antes (Cadastro)
-*(https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/f09a2ba203fecc25d7237ab796cc4923784eb697/5-Redesign/2%20-%20Etapa%202%20Evolutiva/4%20-%20cadastro-login/cadastro-antes.png)*
+!(https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/f09a2ba203fecc25d7237ab796cc4923784eb697/5-Redesign/2%20-%20Etapa%202%20Evolutiva/4%20-%20cadastro-login/cadastro-antes.png)
 Depois (Cadastro)
-*(https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/f09a2ba203fecc25d7237ab796cc4923784eb697/5-Redesign/2%20-%20Etapa%202%20Evolutiva/4%20-%20cadastro-login/cadastro-depois.png)*
+!(https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/f09a2ba203fecc25d7237ab796cc4923784eb697/5-Redesign/2%20-%20Etapa%202%20Evolutiva/4%20-%20cadastro-login/cadastro-depois.png)
 
 
 ---
