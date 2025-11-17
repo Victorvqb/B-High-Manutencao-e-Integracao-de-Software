@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'; // <-- 1. useEffect Adicionado
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../utils/axiosInstance'; // <--- MUDANÇA IMPORTANTE
+// VVVVVV 2. Ícones Adicionados VVVVVV
+import { FaEye, FaEyeSlash, FaCheckCircle, FaTimesCircle } from "react-icons/fa"; 
 
 export default function Cadastro() {
   const [nome, setNome] = useState('');
@@ -8,15 +10,36 @@ export default function Cadastro() {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [senha, setSenha] = useState('');
+  const [confirmarSenha, setConfirmarSenha] = useState(''); // <-- 3. Estado de Confirmação
   const [role, setRole] = useState('aluno');
   const [erroCadastro, setErroCadastro] = useState('');
   const [mensagem, setMensagem] = useState('');
   const [termosAceites, setTermosAceites] = useState(false);
 
+  // VVVVVV 4. Estados de Acessibilidade VVVVVV
+  const [showSenha, setShowSenha] = useState(false);
+  const [showConfirmarSenha, setShowConfirmarSenha] = useState(false);
+  const [validacaoSenha, setValidacaoSenha] = useState({
+    minChar: false,
+    maiuscula: false,
+    numero: false,
+  });
+  // ^^^^^^ FIM DA MUDANÇA ^^^^^^
+
   const navigate = useNavigate();
 
   // VVVVVV REGRA DE VALIDAÇÃO ATUALIZADA AQUI VVVVVV
   const validarUsername = (user) => /^[a-zA-Z0-9_]+$/.test(user);
+
+  // VVVVVV 5. Efeito para validar senha em tempo real VVVVVV
+  useEffect(() => {
+    setValidacaoSenha({
+      minChar: senha.length >= 6,
+      maiuscula: /[A-Z]/.test(senha),
+      numero: /[0-9]/.test(senha)
+    });
+  }, [senha]);
+  // ^^^^^^ FIM DA MUDANÇA ^^^^^^
 
   const handleCadastro = async () => {
     setErroCadastro('');
@@ -37,10 +60,17 @@ export default function Cadastro() {
       return;
     }
 
-    if (senha.length < 6) {
-      setErroCadastro("A senha deve ter pelo menos 6 caracteres.");
+    // VVVVVV 6. Validação de Senha Atualizada VVVVVV
+    if (!validacaoSenha.minChar || !validacaoSenha.maiuscula || !validacaoSenha.numero) {
+      setErroCadastro("A senha não atende a todos os requisitos.");
       return;
     }
+
+    if (senha !== confirmarSenha) {
+      setErroCadastro("As senhas não coincidem.");
+      return;
+    }
+    // ^^^^^^ FIM DA MUDANÇA ^^^^^^
 
     if (!validarUsername(trimmedUsername)) {
       setErroCadastro(
@@ -91,6 +121,14 @@ export default function Cadastro() {
     }
   };
 
+  // Componente para a lista de validação
+  const ValidationItem = ({ valido, texto }) => (
+    <li className={`flex items-center ${valido ? 'text-green-500' : 'text-red-500'}`}>
+      {valido ? <FaCheckCircle className="mr-2" /> : <FaTimesCircle className="mr-2" />}
+      {texto}
+    </li>
+  );
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 text-black dark:text-white p-4">
       <div className="w-full max-w-md p-8 space-y-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
@@ -134,13 +172,53 @@ export default function Cadastro() {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
-        <input
-          className="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-black dark:text-white rounded-md px-3 py-2"
-          type="password"
-          placeholder="Senha"
-          value={senha}
-          onChange={(e) => setSenha(e.target.value)}
-        />
+        
+        {/* VVVVVV 7. CAMPO DE SENHA ATUALIZADO VVVVVV */}
+        <div className="relative w-full">
+          <input
+            className="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-black dark:text-white rounded-md px-3 py-2 pr-10"
+            type={showSenha ? "text" : "password"}
+            placeholder="Senha"
+            value={senha}
+            onChange={(e) => setSenha(e.target.value)}
+          />
+          <button
+            type="button"
+            className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+            onClick={() => setShowSenha(!showSenha)}
+            aria-label={showSenha ? "Ocultar senha" : "Mostrar senha"}
+          >
+            {showSenha ? <FaEyeSlash /> : <FaEye />}
+          </button>
+        </div>
+        
+        {/* VVVVVV 8. LISTA DE VALIDAÇÃO ADICIONADA VVVVVV */}
+        <ul className="text-sm space-y-1 text-gray-600 dark:text-gray-400">
+          <ValidationItem valido={validacaoSenha.minChar} texto="Pelo menos 6 caracteres" />
+          <ValidationItem valido={validacaoSenha.maiuscula} texto="Pelo menos 1 letra maiúscula" />
+          <ValidationItem valido={validacaoSenha.numero} texto="Pelo menos 1 número" />
+        </ul>
+        {/* ^^^^^^ FIM DA MUDANÇA ^^^^^^ */}
+
+        {/* VVVVVV 9. CAMPO CONFIRMAR SENHA ADICIONADO VVVVVV */}
+        <div className="relative w-full">
+          <input
+            className="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-black dark:text-white rounded-md px-3 py-2 pr-10"
+            type={showConfirmarSenha ? "text" : "password"}
+            placeholder="Confirmar Senha"
+            value={confirmarSenha}
+            onChange={(e) => setConfirmarSenha(e.target.value)}
+          />
+          <button
+            type="button"
+            className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+            onClick={() => setShowConfirmarSenha(!showConfirmarSenha)}
+            aria-label={showConfirmarSenha ? "Ocultar senha" : "Mostrar senha"}
+          >
+            {showConfirmarSenha ? <FaEyeSlash /> : <FaEye />}
+          </button>
+        </div>
+        {/* ^^^^^^ FIM DA MUDANÇA ^^^^^^ */}
 
         <div className="flex flex-col gap-2 mb-4 text-black dark:text-white">
           <label className="flex items-center">
