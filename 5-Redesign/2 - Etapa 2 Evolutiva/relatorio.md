@@ -47,7 +47,7 @@ Foram implementadas duas melhorias significativas de acessibilidade.
 * **Solução:** As classes de cor foram ajustadas. O botão "Entrar" foi escurecido (`bg-green-700`) e os links de texto foram clareados (`dark:text-blue-400`) no modo escuro.
 * **Evidências (Relatórios Lighthouse):**
 
-> **Atenção:** Os links abaixo estão copiados do arquivo `relatorio.md`, mas parecem incorretos, pois apontam para as imagens da "Funcionalidade de Curtida" (Seção 1.2) em vez dos relatórios do Lighthouse.
+
 
 Antes (Falha de Contraste)
 ![Antes (Falha de Contraste)](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/e520daa9462f4305bf20d7d2ae8ae08137e9a230/5-Redesign/5-evidencias-antes/Funcionalidade-curtida-antes.png?raw=true)
@@ -63,11 +63,19 @@ Depois (Aprovado)
     * Um ícone de "olho" (`<FaEye />`) foi adicionado aos campos de senha em `Login.jsx` e `Cadastro.jsx` para alternar a visibilidade.
     * O `Cadastro.jsx` agora exibe uma lista de requisitos de senha (mínimo de 6 caracteres, 1 maiúscula, 1 número) que valida em tempo real.
     * Um campo "Confirmar Senha" foi adicionado ao `Cadastro.jsx`.
+      
 * **Evidências (Antes e Depois):**
+  
+Antes (Login)
+*(https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/f09a2ba203fecc25d7237ab796cc4923784eb697/5-Redesign/2%20-%20Etapa%202%20Evolutiva/4%20-%20cadastro-login/tela-login-antes.png)*
+Depois (Login)
+*(https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/f09a2ba203fecc25d7237ab796cc4923784eb697/5-Redesign/2%20-%20Etapa%202%20Evolutiva/4%20-%20cadastro-login/tela-login-depois.png)*
 
-*(Evidência do estado anterior, mostrando a falta de validação e visibilidade - Link não fornecido no arquivo)*
+Antes (Cadastro)
+*(https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/f09a2ba203fecc25d7237ab796cc4923784eb697/5-Redesign/2%20-%20Etapa%202%20Evolutiva/4%20-%20cadastro-login/cadastro-antes.png)*
+Depois (Cadastro)
+*(https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/f09a2ba203fecc25d7237ab796cc4923784eb697/5-Redesign/2%20-%20Etapa%202%20Evolutiva/4%20-%20cadastro-login/cadastro-depois.png)*
 
-*(Evidência do estado posterior, mostrando a validação em tempo real e o ícone de visibilidade - Link não fornecido no arquivo)*
 
 ---
 
