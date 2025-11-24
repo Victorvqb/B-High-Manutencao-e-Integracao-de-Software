@@ -1,6 +1,6 @@
 # Trabalho Prático 5 – Engenharia Reversa
 
-**Instituição:** Universidade Federal do Amazonas (UFAM)  
+**Instituição:** Instituto de Ciências Exatas e Tecnologia - ICET/UFAM  
 **Disciplina:** Manutenção e Integração de Software  
 **Sistema Analisado:** B-High Education (Plataforma AVA)
 
