@@ -1,9 +1,8 @@
-import React, { useEffect, useState, useMemo } from "react"; // <-- 1. useMemo adicionado
+import React, { useEffect, useState, useMemo } from "react";
 import dayjs from "dayjs";
 import { jwtDecode } from "jwt-decode";
-import Sidebar from "../components/Sidebar";
 import axiosInstance from "../utils/axiosInstance";
-import { FaSearch } from "react-icons/fa"; // <-- 2. Ícone de busca
+import { FaSearch } from "react-icons/fa";
 
 const LIMITE_MEDIA = 7;
 const LIMITE_BAIXA = 31;
@@ -16,7 +15,7 @@ export default function AulasAluno() {
   const [media, setMedia] = useState([]);
   const [baixa, setBaixa] = useState([]);
   const [showEntrega, setShowEntrega] = useState(false);
-  const [busca, setBusca] = useState(""); // <-- 3. Estado para a busca
+  const [busca, setBusca] = useState("");
 
   useEffect(() => {
     if (!token) return;
@@ -56,9 +55,13 @@ export default function AulasAluno() {
       aulas
         .filter(a => !minhasEntregasIds.has(Number(a.id)))
         .forEach(a => {
-          const limite = a.data;
-          if (!limite) return;
-          const diff = dayjs(limite).startOf("day").diff(hoje, "day");
+          // PROTEÇÃO CONTRA DATA NULA
+          if (!a.data) return; 
+          
+          const limite = dayjs(a.data);
+          if (!limite.isValid()) return;
+
+          const diff = limite.startOf("day").diff(hoje, "day");
           if (diff <= 0) _alta.push(a);
           else if (diff <= LIMITE_MEDIA) _media.push(a);
           else if (diff <= LIMITE_BAIXA) _baixa.push(a);
@@ -69,11 +72,10 @@ export default function AulasAluno() {
       setBaixa(_baixa);
     } catch (err) {
       console.error("Erro ao carregar aulas:", err.response?.data || err);
-      alert("Erro ao carregar suas aulas.");
+      // alert removido para não spammar erro em dev
     }
   }
 
-  // 4. Lógica para filtrar as listas com base na busca
   const filtrarLista = (lista) => {
     if (!busca) return lista;
     return lista.filter(a => 
@@ -84,7 +86,6 @@ export default function AulasAluno() {
   const altaFiltrada = useMemo(() => filtrarLista(alta), [alta, busca]);
   const mediaFiltrada = useMemo(() => filtrarLista(media), [media, busca]);
   const baixaFiltrada = useMemo(() => filtrarLista(baixa), [baixa, busca]);
-  // Fim da lógica de filtro
 
   const CardPrioridade = ({ titulo, lista, borda }) => (
     <div className={`rounded border ${borda} bg-white dark:bg-gray-800 p-4 shadow`}>
@@ -116,11 +117,6 @@ export default function AulasAluno() {
                 <p className="text-xs text-gray-600 dark:text-gray-400">
                   Prazo: {dayjs(a.data).format("DD/MM/YYYY")}
                 </p>
-                {a.descricao && (
-                  <p className="text-xs mt-1 text-gray-700 dark:text-gray-400">
-                    {a.descricao}
-                  </p>
-                )}
               </a>
             );
           })}
@@ -130,7 +126,6 @@ export default function AulasAluno() {
   );
 
   const EntregarModal = () => {
-    // ... (código do modal de entrega permanece o mesmo) ...
     const [selAula, setSelAula] = useState("");
     const [selArquivo, setSelArquivo] = useState(null);
 
@@ -182,7 +177,6 @@ export default function AulasAluno() {
                 <option key={a.id} value={a.id}>{a.titulo}</option>
               ))}
             </select>
-
             <label className="block text-sm mb-1 text-green-700 dark:text-green-400">Arquivo</label>
             <input
               type="file"
@@ -190,7 +184,6 @@ export default function AulasAluno() {
               className="mb-4 w-full text-xs"
               required
             />
-
             <div className="flex justify-end gap-2">
               <button
                 type="button"
@@ -213,56 +206,37 @@ export default function AulasAluno() {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-      <Sidebar isAluno />
-      <main className="ml-64 flex-1 p-4 sm:p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h1 className="text-2xl sm:text-3xl font-bold text-green-700 dark:text-green-400">
-            Minhas Aulas
-          </h1>
-          <button
-            onClick={() => setShowEntrega(true)}
-            className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-          >
-            Entregar atividade
-          </button>
-        </div>
+    <div className="flex-1 p-4 sm:p-6">
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl sm:text-3xl font-bold text-green-700 dark:text-green-400">
+          Minhas Aulas
+        </h1>
+        <button
+          onClick={() => setShowEntrega(true)}
+          className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+        >
+          Entregar atividade
+        </button>
+      </div>
 
-        {/* VVVVVV 5. BARRA DE BUSCA ADICIONADA AQUI VVVVVV */}
-        <div className="mb-6 relative">
-          <input
-            type="text"
-            value={busca}
-            onChange={(e) => setBusca(e.target.value)}
-            placeholder="Buscar aula por título..."
-            className="w-full p-2 pl-10 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-black dark:text-white"
-          />
-          <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-        </div>
-        {/* ^^^^^^ FIM DA BARRA DE BUSCA ^^^^^^ */}
+      <div className="mb-6 relative">
+        <input
+          type="text"
+          value={busca}
+          onChange={(e) => setBusca(e.target.value)}
+          placeholder="Buscar aula por título..."
+          className="w-full p-2 pl-10 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-black dark:text-white"
+        />
+        <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+      </div>
 
-        {/* VVVVVV 6. CARDS USANDO AS LISTAS FILTRADAS VVVVVV */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <CardPrioridade
-            titulo="Alta prioridade (vence hoje)"
-            borda="border-red-300"
-            lista={altaFiltrada} 
-          />
-          <CardPrioridade
-            titulo="Média prioridade (próx. 7 dias)"
-            borda="border-yellow-300"
-            lista={mediaFiltrada}
-          />
-          <CardPrioridade
-            titulo="Baixa prioridade (até 31 dias)"
-            borda="border-blue-300"
-            lista={baixaFiltrada}
-          />
-        </div>
-        {/* ^^^^^^ FIM DOS CARDS ^^^^^^ */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <CardPrioridade titulo="Alta prioridade (vence hoje)" borda="border-red-300" lista={altaFiltrada} />
+        <CardPrioridade titulo="Média prioridade (próx. 7 dias)" borda="border-yellow-300" lista={mediaFiltrada} />
+        <CardPrioridade titulo="Baixa prioridade (até 31 dias)" borda="border-blue-300" lista={baixaFiltrada} />
+      </div>
 
-        {showEntrega && <EntregarModal />}
-      </main>
+      {showEntrega && <EntregarModal />}
     </div>
   );
 }
