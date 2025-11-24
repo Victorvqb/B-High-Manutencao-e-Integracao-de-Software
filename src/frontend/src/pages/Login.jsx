@@ -1,20 +1,17 @@
 import React, { useState } from "react";
-import axios from "../utils/axiosInstance";
-import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
+import axiosInstance from "../utils/axiosInstance";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { AUTH_KEYS } from "../utils/constants"; 
-import { FaEye, FaEyeSlash } from "react-icons/fa"; // <-- 1. Ícones adicionados
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [souAdmin, setSouAdmin] = useState(false); // <-- A CAIXA AINDA É USADA, MAS NÃO PARA REDIRECT
+  const [souAdmin, setSouAdmin] = useState(false);
   const [erroLogin, setErroLogin] = useState("");
   const [isLoading, setIsLoading] = useState(false); 
-<<<<<<< HEAD
-=======
-  const [showSenha, setShowSenha] = useState(false); // <-- 2. Estado para mostrar/ocultar
->>>>>>> feature/acessibilidade-contraste
+  const [showSenha, setShowSenha] = useState(false); 
   const navigate = useNavigate();
 
   const handleLogin = async () => {
@@ -26,7 +23,7 @@ export default function Login() {
     setIsLoading(true); 
 
     try {
-      const response = await axios.post("token/", {
+      const response = await axiosInstance.post("token/", {
         username,
         password,
       });
@@ -38,11 +35,10 @@ export default function Login() {
       const isSuperuser = decoded.is_superuser === true || decoded.is_superuser === "true";
       const userFromBackend = decoded.username;
 
-      // Se o usuário marcou "Sou admin" mas não é staff, mostre erro.
       if (souAdmin && !isStaff) {
           setErroLogin("Você não tem permissão de administrador.");
           setIsLoading(false);
-          return; // Para a execução aqui
+          return;
       }
 
       localStorage.setItem(AUTH_KEYS.ACCESS, access);
@@ -52,8 +48,6 @@ export default function Login() {
       localStorage.setItem(AUTH_KEYS.IS_SUPERUSER, JSON.stringify(isSuperuser));
       localStorage.removeItem(AUTH_KEYS.FOTO_PERFIL);
 
-      // VVVVVV LÓGICA DE REDIRECIONAMENTO CORRIGIDA VVVVVV
-      // Esta lógica é a mesma do App.js e não depende mais do checkbox 'souAdmin'
       if (isSuperuser) {
         navigate("/admin-dashboard");
       } else if (isStaff) {
@@ -61,7 +55,6 @@ export default function Login() {
       } else {
         navigate("/home");
       }
-      // ^^^^^^ FIM DA CORREÇÃO ^^^^^^
 
     } catch (err) {
       setErroLogin("Usuário ou senha inválidos.");
@@ -88,20 +81,8 @@ export default function Login() {
           placeholder="Usuário"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          aria-label="Usuário" 
         />
-<<<<<<< HEAD
-        <input
-          className="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-black dark:text-white rounded-md px-3 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-green-500"
-          type="password"
-          placeholder="Senha"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          aria-label="Senha" 
-        />
-=======
         
-        {/* VVVVVV 3. CAMPO DE SENHA ATUALIZADO VVVVVV */}
         <div className="relative w-full mb-4">
           <input
             className="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-black dark:text-white rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 pr-10"
@@ -109,19 +90,15 @@ export default function Login() {
             placeholder="Senha"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            aria-label="Senha" 
           />
           <button
             type="button"
             className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
             onClick={() => setShowSenha(!showSenha)}
-            aria-label={showSenha ? "Ocultar senha" : "Mostrar senha"}
           >
             {showSenha ? <FaEyeSlash /> : <FaEye />}
           </button>
         </div>
-        {/* ^^^^^^ FIM DA ATUALIZAÇÃO ^^^^^^ */}
->>>>>>> feature/acessibilidade-contraste
 
         <p
           className="text-sm text-blue-600 dark:text-blue-400 hover:underline text-center cursor-pointer mb-4"

@@ -54,7 +54,7 @@ useEffect(() => {
 ```
 
 **Evidência com o Sistema:**
-![Tela de Cadastro](./prints/tela_cadastro.png)
+![Tela de Cadastro](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/db63051460133fec1e3119175a6677ce78985149/6-Engenharia%20Reversa/1-%20Evidencias/Cadastro.png)
 
 #### US-02: Autenticação (Login)
 * **História:** "Enquanto **Usuário**, quero inserir minhas credenciais, para ser direcionado ao painel correspondente ao meu perfil."
@@ -63,7 +63,7 @@ useEffect(() => {
   * Exibição de mensagem de erro clara para credenciais inválidas.
 
 **Evidência com o Sistema:**
-![Tela de Login](./prints/tela_login.png)
+![Tela de Login](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/db63051460133fec1e3119175a6677ce78985149/6-Engenharia%20Reversa/1-%20Evidencias/Login.png)
 
 ---
 
@@ -78,7 +78,7 @@ useEffect(() => {
   * **RN-03 (Validação):** É obrigatório fornecer o link ou o arquivo conforme o tipo de conteúdo selecionado.
 
 **Evidência com o Sistema:**
-![Modal de Criação de Aula](./prints/modal_criar_aula.png)
+![Modal de Criação de Aula](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/db63051460133fec1e3119175a6677ce78985149/6-Engenharia%20Reversa/1-%20Evidencias/professor-criar-aula.png)
 
 #### US-04: Gestão de Atividades Avaliativas
 * **História:** "Enquanto **Professor**, quero criar atividades com prazo e pontuação definidos, para avaliar os alunos."
@@ -87,7 +87,7 @@ useEffect(() => {
   * Deve haver um campo numérico para a pontuação.
 
 **Evidência com o Sistema:**
-![Tela de Criação de Atividade](./prints/tela_criar_atividade.png)
+![Tela de Criação de Atividade](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/db63051460133fec1e3119175a6677ce78985149/6-Engenharia%20Reversa/1-%20Evidencias/dash-professor-gerenciar-aula.png)
 
 #### US-05: Monitoramento de Entregas
 * **História:** "Enquanto **Professor**, quero visualizar e baixar as entregas dos alunos, para realizar a correção."
