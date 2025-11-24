@@ -205,4 +205,4 @@ A análise dos arquivos de configuração (`package.json`, `requirements.txt`) i
 ### Integrações
 * **Google YouTube Data API:** Para consumo de vídeos externos.
 
-#Obrigado!!
+# Obrigado!!
