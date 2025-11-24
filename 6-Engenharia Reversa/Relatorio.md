@@ -87,7 +87,7 @@ useEffect(() => {
   * Deve haver um campo numérico para a pontuação.
 
 **Evidência com o Sistema:**
-![Tela de Criação de Atividade](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/db63051460133fec1e3119175a6677ce78985149/6-Engenharia%20Reversa/1-%20Evidencias/dash-professor-gerenciar-aula.png)
+![Tela de Criação de Atividade](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/d991927a6ad1dccfbf905182f013c41860cf6f99/6-Engenharia%20Reversa/1-%20Evidencias/professor-atividades.png)
 
 #### US-05: Monitoramento de Entregas
 * **História:** "Enquanto **Professor**, quero visualizar e baixar as entregas dos alunos, para realizar a correção."
@@ -96,7 +96,7 @@ useEffect(() => {
   * Acesso aos arquivos enviados por cada aluno em um modal específico.
 
 **Evidência com o Sistema:**
-![Dashboard Professor com Lista](./prints/dashboard_professor.png)
+![Dashboard Professor com Lista](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/6626ceb4d26d55ad1d19b5ac1b6e2470b66b9f6d/6-Engenharia%20Reversa/1-%20Evidencias/monitor-entregas.png)
 
 ---
 
@@ -110,7 +110,7 @@ useEffect(() => {
   * **RN-04 (Cálculo de Prioridade):** Alta (vence hoje), Média (até 7 dias), Baixa (até 31 dias).
 
 **Evidência com o Sistema:**
-![Dashboard Aluno](./prints/dashboard_aluno.png)
+![Dashboard Aluno](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/6626ceb4d26d55ad1d19b5ac1b6e2470b66b9f6d/6-Engenharia%20Reversa/1-%20Evidencias/aluno%20atividades.png)
 
 #### US-07: Responder Atividade
 * **História:** "Enquanto **Aluno**, quero enviar minha resposta (texto ou arquivo) para uma atividade, para ser avaliado."
@@ -119,7 +119,7 @@ useEffect(() => {
   * O formulário deve permitir upload de arquivo.
 
 **Evidência com o Sistema:**
-![Tela de Envio de Atividade](./prints/tela_responder_atividade.png)
+![Tela de Envio de Atividade](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/6626ceb4d26d55ad1d19b5ac1b6e2470b66b9f6d/6-Engenharia%20Reversa/1-%20Evidencias/aluno%20atividades-2.png)
 
 ---
 
@@ -128,7 +128,7 @@ useEffect(() => {
 ### 3.1 Modelagem Estrutural (Diagrama de Classes)
 O Diagrama de Classes abaixo ilustra a organização dos dados no Backend (Django Models), destacando as relações entre Usuários, Conteúdos (Aulas/Atividades) e Entregas.
 
-![Diagrama de Classes UML](./diagramas/diagrama_classes.png)
+![Diagrama de Classes UML](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/6626ceb4d26d55ad1d19b5ac1b6e2470b66b9f6d/6-Engenharia%20Reversa/2-%20Diagramas/Diagrama%20de%20classe%20.jpg)
 
 ### Evidência da Comunicação Cliente-Servidor
 O sistema utiliza o `axiosInstance` para centralizar as requisições HTTP, injetando o Token JWT automaticamente no cabeçalho. Isso comprova a arquitetura *Stateless* da API REST.
@@ -153,7 +153,7 @@ Foi utilizado o **MoLIC (Modelagem da Linguagem de Interação como Conversa)** 
 * `u:` Fala do Usuário (Ação)
 * `s:` Fala do Sistema (Resposta)
 
-![Diagrama MoLIC Estruturado](./diagramas/diagrama_molic.png)
+![Diagrama MoLIC Estruturado](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/6626ceb4d26d55ad1d19b5ac1b6e2470b66b9f6d/6-Engenharia%20Reversa/2-%20Diagramas/Molic.png)
 
 ---
 
@@ -180,7 +180,7 @@ async function carregarDados() {
 }
 ```
 
-![Diagrama de Arquitetura](./diagramas/diagrama_arquitetura.png)
+![Diagrama de Arquitetura](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/6626ceb4d26d55ad1d19b5ac1b6e2470b66b9f6d/6-Engenharia%20Reversa/2-%20Diagramas/Arquitetura.jpg)
 
 ---
 
@@ -204,3 +204,5 @@ A análise dos arquivos de configuração (`package.json`, `requirements.txt`) i
 
 ### Integrações
 * **Google YouTube Data API:** Para consumo de vídeos externos.
+
+#Obrigado!!
