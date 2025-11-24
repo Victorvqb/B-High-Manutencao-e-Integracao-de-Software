@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
-import Sidebar from "../components/Sidebar";
+// import Sidebar from "../components/Sidebar"; // <-- 1. REMOVIDO
 import axiosInstance from "../utils/axiosInstance";
 
 // -------------------- Modal de Entregas --------------------
@@ -89,48 +89,46 @@ export default function AulasProfessor() {
   const entregasPorAluno = (alunoId) =>
     entregas.filter((e) => Number(e.aluno) === Number(alunoId));
 
+  // VVVVVV 2. DIV EXTERNA, <Sidebar /> E CLASSE "ml-64" REMOVIDAS VVVVVV
   return (
-    <div className="flex min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-      <Sidebar isStaff />
+    <main className="flex-1 p-4 sm:p-6 relative">
+      <h1 className="mb-4 sm:mb-6 text-xl sm:text-2xl font-bold text-green-600 dark:text-green-400">
+        Entregas dos Alunos
+      </h1>
 
-      <main className="ml-64 flex-1 p-4 sm:p-6 relative">
-        <h1 className="mb-4 sm:mb-6 text-xl sm:text-2xl font-bold text-green-600 dark:text-green-400">
-          Entregas dos Alunos
-        </h1>
-
-        <div className="space-y-3 rounded-xl border border-green-300 dark:border-green-600 bg-green-50 dark:bg-gray-800 p-3 sm:p-4 shadow w-full max-w-md mx-auto">
-          <h2 className="mb-2 text-base sm:text-lg font-bold">Alunos</h2>
-          {alunos.length === 0 ? (
-            <p className="text-gray-600 dark:text-gray-300 text-sm">
-              Nenhum aluno encontrado.
-            </p>
-          ) : (
-            alunos.map((al) => (
-              <button
-                key={al.id}
-                type="button"
-                onClick={() => setModalStudent(al)}
-                className="w-full flex justify-between items-center rounded border border-gray-300 dark:border-gray-600 px-3 py-2 bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition text-sm"
-              >
-                <p className="truncate font-medium text-green-800 dark:text-green-400">
-                  {al.nome}
-                </p>
-                <span className="text-xs text-gray-600 dark:text-gray-300">
-                  Entregas: {entregasPorAluno(al.id).length}
-                </span>
-              </button>
-            ))
-          )}
-        </div>
-
-        {modalStudent && (
-          <DeliveriesModal
-            student={modalStudent}
-            deliveries={entregasPorAluno(modalStudent.id)}
-            onClose={() => setModalStudent(null)}
-          />
+      <div className="space-y-3 rounded-xl border border-green-300 dark:border-green-600 bg-green-50 dark:bg-gray-800 p-3 sm:p-4 shadow w-full max-w-md mx-auto">
+        <h2 className="mb-2 text-base sm:text-lg font-bold">Alunos</h2>
+        {alunos.length === 0 ? (
+          <p className="text-gray-600 dark:text-gray-300 text-sm">
+            Nenhum aluno encontrado.
+          </p>
+        ) : (
+          alunos.map((al) => (
+            <button
+              key={al.id}
+              type="button"
+              onClick={() => setModalStudent(al)}
+              className="w-full flex justify-between items-center rounded border border-gray-300 dark:border-gray-600 px-3 py-2 bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition text-sm"
+            >
+              <p className="truncate font-medium text-green-800 dark:text-green-400">
+                {al.nome}
+              </p>
+              <span className="text-xs text-gray-600 dark:text-gray-300">
+                Entregas: {entregasPorAluno(al.id).length}
+              </span>
+            </button>
+          ))
         )}
-      </main>
-    </div>
+      </div>
+
+      {modalStudent && (
+        <DeliveriesModal
+          student={modalStudent}
+          deliveries={entregasPorAluno(modalStudent.id)}
+          onClose={() => setModalStudent(null)}
+        />
+      )}
+    </main>
   );
+  // ^^^^^^ FIM DA CORREÇÃO ^^^^^^
 }

@@ -47,8 +47,11 @@ Foram implementadas duas melhorias significativas de acessibilidade.
 * **Solução:** As classes de cor foram ajustadas. O botão "Entrar" foi escurecido (`bg-green-700`) e os links de texto foram clareados (`dark:text-blue-400`) no modo escuro.
 * **Evidências (Relatórios Lighthouse):**
 
+<<<<<<< HEAD
 > **Atenção:** Os links abaixo estão copiados do arquivo `relatorio.md`, mas parecem incorretos, pois apontam para as imagens da "Funcionalidade de Curtida" (Seção 1.2) em vez dos relatórios do Lighthouse.
 
+=======
+>>>>>>> feature/acessibilidade-contraste
 Antes (Falha de Contraste)
 ![Antes (Falha de Contraste)](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/e520daa9462f4305bf20d7d2ae8ae08137e9a230/5-Redesign/5-evidencias-antes/Funcionalidade-curtida-antes.png?raw=true)
 Depois (Aprovado)
@@ -60,6 +63,7 @@ Depois (Aprovado)
 * **Justificativa:** Esta melhoria foi solicitada pelo Professor Andrey Rodrigues como um aprimoramento da Etapa 1.
 * **Problema:** Os campos de senha no `Login.jsx` e `Cadastro.jsx` violavam a **Heurística 5 (Prevenção de erros)**. O usuário não podia ver a senha que estava digitando e o cadastro não validava a complexidade.
 * **Solução:**
+<<<<<<< HEAD
     * Um ícone de "olho" (`<FaEye />`) foi adicionado aos campos de senha em `Login.jsx` e `Cadastro.jsx` para alternar a visibilidade.
     * O `Cadastro.jsx` agora exibe uma lista de requisitos de senha (mínimo de 6 caracteres, 1 maiúscula, 1 número) que valida em tempo real.
     * Um campo "Confirmar Senha" foi adicionado ao `Cadastro.jsx`.
@@ -68,6 +72,24 @@ Depois (Aprovado)
 *(Evidência do estado anterior, mostrando a falta de validação e visibilidade - Link não fornecido no arquivo)*
 
 *(Evidência do estado posterior, mostrando a validação em tempo real e o ícone de visibilidade - Link não fornecido no arquivo)*
+=======
+    * Um ícone de "olho" (`<FaEye />`) foi adicionado aos campos de senha em `Login.jsx` e `Cadastro.jsx` para alternar a visibilidade.
+    * O `Cadastro.jsx` agora exibe uma lista de requisitos de senha (mínimo de 6 caracteres, 1 maiúscula, 1 número) que valida em tempo real.
+    * Um campo "Confirmar Senha" foi adicionado ao `Cadastro.jsx`.
+      
+* **Evidências (Antes e Depois):**
+  
+Antes (Login)
+![](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/f09a2ba203fecc25d7237ab796cc4923784eb697/5-Redesign/2%20-%20Etapa%202%20Evolutiva/4%20-%20cadastro-login/tela-login-antes.png)
+Depois (Login)
+![](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/f09a2ba203fecc25d7237ab796cc4923784eb697/5-Redesign/2%20-%20Etapa%202%20Evolutiva/4%20-%20cadastro-login/tela-login-depois.png)
+
+Antes (Cadastro)
+![](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/f09a2ba203fecc25d7237ab796cc4923784eb697/5-Redesign/2%20-%20Etapa%202%20Evolutiva/4%20-%20cadastro-login/cadastro-antes.png)
+Depois (Cadastro)
+![](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/f09a2ba203fecc25d7237ab796cc4923784eb697/5-Redesign/2%20-%20Etapa%202%20Evolutiva/4%20-%20cadastro-login/cadastro-depois.png)
+
+>>>>>>> feature/acessibilidade-contraste
 
 ---
 
@@ -75,6 +97,7 @@ Depois (Aprovado)
 
 ### Implementação
 Foi adotado um fluxo de trabalho baseado em Git Flow simplificado:
+<<<<<<< HEAD
 1.  **`develop`:** Criada como a branch principal de desenvolvimento.
 2.  **`feature/...`:** Branches individuais para cada tarefa (ex: `feature/redesign-consistencia-botoes`, `feature/forum-likes`).
 3.  **Commits:** Cada correção foi registrada com uma mensagem clara, ligando-a ao Redesign ou à Etapa 2.
@@ -82,3 +105,12 @@ Foi adotado um fluxo de trabalho baseado em Git Flow simplificado:
 
 Histórico de Commits e Branches
 ![Histórico Git](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/e520daa9462f4305bf20d7d2ae8ae08137e9a230/5-Redesign/6-versionamento/Branchs.png?raw=true)
+=======
+1.  **`develop`:** Criada como a branch principal de desenvolvimento.
+2.  **`feature/...`:** Branches individuais para cada tarefa (ex: `feature/redesign-consistencia-botoes`, `feature/forum-likes`).
+3.  **Commits:** Cada correção foi registrada com uma mensagem clara, ligando-a ao Redesign ou à Etapa 2.
+* **Evidência:**
+
+Histórico de Commits e Branches
+![Histórico Git](https://github.com/Victorvqb/B-High-Manutencao-e-Integracao-de-Software/blob/e520daa9462f4305bf20d7d2ae8ae08137e9a230/5-Redesign/6-versionamento/Branchs.png?raw=true)
+>>>>>>> feature/acessibilidade-contraste

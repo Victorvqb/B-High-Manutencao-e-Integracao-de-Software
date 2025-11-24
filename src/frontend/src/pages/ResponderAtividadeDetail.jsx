@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import Sidebar from "../components/Sidebar";
 import axiosInstance from "../utils/axiosInstance";
 
 export default function ResponderAtividadeDetail() {
@@ -25,7 +24,6 @@ export default function ResponderAtividadeDetail() {
         setLoading(false);
       }
     };
-
     fetchAtividade();
   }, [id]);
 
@@ -34,7 +32,8 @@ export default function ResponderAtividadeDetail() {
     setMensagem("Enviando...");
 
     const formData = new FormData();
-    formData.append("atividade", id);
+    // O Backend espera "atividade" (ID da atividade a que se refere)
+    formData.append("atividade", id); 
     formData.append("resposta_texto", respostaTexto);
     if (arquivo) formData.append("arquivo", arquivo);
 
@@ -42,92 +41,74 @@ export default function ResponderAtividadeDetail() {
       await axiosInstance.post("entregas/", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      setMensagem("Atividade enviada com sucesso!");
+      setMensagem("✅ Atividade enviada com sucesso!");
       setRespostaTexto("");
       setArquivo(null);
-      setTimeout(() => navigate("/atividades"), 2000);
+      setTimeout(() => navigate("/atividades-aluno"), 2000); // Redireciona para a lista
     } catch (err) {
-      console.error("Erro ao enviar atividade:", err);
-      setMensagem("Erro ao enviar atividade.");
+      console.error("Erro ao enviar atividade:", err.response?.data || err);
+      setMensagem("❌ Erro ao enviar atividade. Tente novamente.");
     }
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white">
-      <Sidebar isAluno />
-      <main className="ml-64 flex-1 p-6">
-        {loading ? (
-          <p>Carregando atividade...</p>
-        ) : atividade ? (
-          <div>
-            <h1 className="text-3xl font-bold text-green-600 dark:text-green-400 mb-4">
-              Responder Atividade: {atividade.titulo}
-            </h1>
-            <p className="mb-2">{atividade.descricao}</p>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-              Prazo: {atividade.data_entrega} até {atividade.hora_entrega}
-            </p>
+    <div className="flex-1 p-6">
+      <button 
+        onClick={() => navigate(-1)} 
+        className="mb-4 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400"
+      >
+        ← Voltar
+      </button>
 
-            {atividade.arquivo && (
-              <p className="mb-4">
-                Arquivo do professor:{" "}
-                <a
-                  href={
-                    atividade.arquivo.startsWith("http")
-                      ? atividade.arquivo
-                      : `http://127.0.0.1:8000${atividade.arquivo}`
-                  }
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 dark:text-blue-400 underline"
-                >
-                  Clique aqui para abrir
-                </a>
+      {loading ? (
+        <p>Carregando atividade...</p>
+      ) : atividade ? (
+        <div className="max-w-2xl bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+          <h1 className="text-3xl font-bold text-green-600 dark:text-green-400 mb-4">
+            Responder: {atividade.titulo}
+          </h1>
+          <p className="mb-4 text-gray-700 dark:text-gray-300">{atividade.descricao}</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-6 border-b pb-4 dark:border-gray-700">
+            Prazo: {atividade.data_entrega} às {atividade.hora_entrega}
+          </p>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block mb-1 font-medium">Sua Resposta (Texto):</label>
+              <textarea
+                value={respostaTexto}
+                onChange={(e) => setRespostaTexto(e.target.value)}
+                className="w-full h-32 p-3 rounded bg-gray-50 dark:bg-gray-700 text-black dark:text-white border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-green-500 outline-none"
+                placeholder="Digite sua resposta aqui..."
+              />
+            </div>
+
+            <div>
+              <label className="block mb-1 font-medium">Anexar Arquivo (Opcional):</label>
+              <input
+                type="file"
+                onChange={(e) => setArquivo(e.target.files[0])}
+                className="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition-colors"
+            >
+              Enviar Atividade
+            </button>
+
+            {mensagem && (
+              <p className={`mt-4 text-center font-medium ${mensagem.includes("sucesso") ? "text-green-600" : "text-red-600"}`}>
+                {mensagem}
               </p>
             )}
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block mb-1">Resposta em texto:</label>
-                <textarea
-                  value={respostaTexto}
-                  onChange={(e) => setRespostaTexto(e.target.value)}
-                  className="w-full h-32 p-2 rounded bg-gray-100 dark:bg-gray-800 text-black dark:text-white border border-gray-300 dark:border-gray-600"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block mb-1">Enviar arquivo (opcional):</label>
-                <input
-                  type="file"
-                  onChange={(e) => setArquivo(e.target.files[0])}
-                  className="text-sm"
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded"
-              >
-                Enviar Atividade
-              </button>
-
-              {mensagem && (
-                <p className="mt-4 text-sm">
-                  {mensagem.includes("sucesso") ? (
-                    <span className="text-green-500">{mensagem}</span>
-                  ) : (
-                    <span className="text-red-500">{mensagem}</span>
-                  )}
-                </p>
-              )}
-            </form>
-          </div>
-        ) : (
-          <p>Atividade não encontrada.</p>
-        )}
-      </main>
+          </form>
+        </div>
+      ) : (
+        <p>Atividade não encontrada.</p>
+      )}
     </div>
   );
 }

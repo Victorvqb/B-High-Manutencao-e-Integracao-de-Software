@@ -3,6 +3,7 @@ import axios from "../utils/axiosInstance";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import { AUTH_KEYS } from "../utils/constants"; 
+import { FaEye, FaEyeSlash } from "react-icons/fa"; // <-- 1. Ícones adicionados
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -10,6 +11,10 @@ export default function Login() {
   const [souAdmin, setSouAdmin] = useState(false); // <-- A CAIXA AINDA É USADA, MAS NÃO PARA REDIRECT
   const [erroLogin, setErroLogin] = useState("");
   const [isLoading, setIsLoading] = useState(false); 
+<<<<<<< HEAD
+=======
+  const [showSenha, setShowSenha] = useState(false); // <-- 2. Estado para mostrar/ocultar
+>>>>>>> feature/acessibilidade-contraste
   const navigate = useNavigate();
 
   const handleLogin = async () => {
@@ -85,6 +90,7 @@ export default function Login() {
           onChange={(e) => setUsername(e.target.value)}
           aria-label="Usuário" 
         />
+<<<<<<< HEAD
         <input
           className="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-black dark:text-white rounded-md px-3 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-green-500"
           type="password"
@@ -93,6 +99,29 @@ export default function Login() {
           onChange={(e) => setPassword(e.target.value)}
           aria-label="Senha" 
         />
+=======
+        
+        {/* VVVVVV 3. CAMPO DE SENHA ATUALIZADO VVVVVV */}
+        <div className="relative w-full mb-4">
+          <input
+            className="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-black dark:text-white rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 pr-10"
+            type={showSenha ? "text" : "password"}
+            placeholder="Senha"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            aria-label="Senha" 
+          />
+          <button
+            type="button"
+            className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+            onClick={() => setShowSenha(!showSenha)}
+            aria-label={showSenha ? "Ocultar senha" : "Mostrar senha"}
+          >
+            {showSenha ? <FaEyeSlash /> : <FaEye />}
+          </button>
+        </div>
+        {/* ^^^^^^ FIM DA ATUALIZAÇÃO ^^^^^^ */}
+>>>>>>> feature/acessibilidade-contraste
 
         <p
           className="text-sm text-blue-600 dark:text-blue-400 hover:underline text-center cursor-pointer mb-4"
