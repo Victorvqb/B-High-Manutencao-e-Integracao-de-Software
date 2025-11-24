@@ -8,7 +8,7 @@
 
 ---
 
-**Equipe:**
+**Discentes:**
 * Bruna Miranda
 * Carlos Breno
 * Julia Farias
